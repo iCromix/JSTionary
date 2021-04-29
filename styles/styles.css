@@ -52,7 +52,8 @@ h4 {
 .result {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    justify-content: stretch;
+    align-items: stretch;
     opacity: 1;
     transition: opacity .5s linear;
 }
@@ -308,7 +309,7 @@ header {
     text-align: center;
     margin-top: 3em;
     margin-bottom: 3em;
-    padding: 1em 2em;
+    padding: 1em 3em;
     border-radius: 10px;
 }
 
@@ -316,24 +317,43 @@ header {
     transition: opacity .25s linear;
 }
 
-.search-result p {
-    color: #fff;
-    padding: .5em;
-    background: rgb(34, 26, 63);
+.result {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: stretch;
+}
+
+.definition-example {
+    font-size: .95em;
+    font-style: italic;
+}
+
+.definition-container {
     border-radius: 5px;
-    margin: 0;
+    line-height: 1.4;
+    font-family: inherit;
+    text-align: left;
+    color: #fff;
+    background-color: rgb(36, 41, 54);
+    margin-bottom: 2em;
+    padding: 1em;
+
+    transition: .25s background-color;
+}
+
+.definition-container p {
+    transition: .25s color;
+}
+
+.definition-container p:hover {
+    color:rgb(148, 195, 255);
 }
 
 .definition {
-    min-width: 450px;
-    max-width: 450px;
+    min-width: 400px;
+    max-width: 400px;
     cursor: pointer;
-
-    transition: .25s background linear;
-}
-
-.definition:hover {
-    background: rgb(69, 52, 129);
 }
 
     /* Errors  */

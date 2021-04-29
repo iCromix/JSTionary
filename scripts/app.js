@@ -64,17 +64,34 @@ class App {
                 sel.removeAllRanges();
                 sel.addRange(r);
                 document.execCommand('Copy');
+                console.log(this);
                 new Notification('Definicion copiada!', { body: `La definicion de ${this.id} se copió al portapapeles`})
             })
         }
     }
 
     displayResult(result) {
+        console.log(result);
+        const formatedResults = result.meanings[0].definitions.map(definition => `
+            <div class="definition-container">
+                <p class="definition" id="${result.word.charAt(0).toUpperCase() + result.word.slice(1)}">
+                    ${definition.definition}
+                </p>
+                ${definition.example ? `
+                    <span class="definition-example">
+                        "${definition.example}"
+                    </span>
+                ` : '<div style="display: none"></div>' }
+            </div>
+        `);
+
         this.state.$resultContainer.innerHTML = `
             <div class="result hide">
                 <h3 class="word" style="${result.word.length > 14 ? 'font-size: 3em' : 'font-size: 3em'}">${result.word}</h3>
                 <h4>${result.meanings[0].definitions.length > 1 ? 'Significados' : 'Signficado'}</h4>
-                ${result.meanings[0].definitions.map(definition => `<p class="definition" id="${result.word.charAt(0).toUpperCase() + result.word.slice(1)}">${definition.definition}</p><br>`).join('')}
+                ${formatedResults.map(result => {
+                    return result;
+                }).join('')}
                 <a class="search-again" href="#">Buscar otra palabra</a>
             </div>
         `
