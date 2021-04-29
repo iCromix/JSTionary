@@ -1,0 +1,58 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>JSTionary</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <link rel="stylesheet" href="./styles/styles.css">
+</head>
+<body>
+    <header id="header">
+        <div class="header-container">
+            <div class="logo">
+                <span class="logo-text">
+                    JSTionary
+                </span>
+            </div>
+            <ul class="nav-items">
+                <li class="nav-item" id="about"><a href="#">Sobre</a></li>
+            </ul>
+        </div>
+    </header>
+    <main>
+        <!-- Modal  -->
+        <div id="about-modal" class="modal hide">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="version">JSTionary 1.0</span>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <p>Una simple aplicacion de diccionario.</p>
+                </div>
+                <div class="modal-footer"> 
+                    <p>Hecho por <a target="_blank" href="https://github.com/iCromix">Cromix</a></p>
+                    <a href="https://github.com/iCromix/JSTionary" target="_blank"><img alt="github icon" height="28" width="28" src="assets/images/icons/github.png"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="main-search-word">
+                <h2>Bienvenido al diccionario!</h2>
+                <p>Escriba una palabra en el cuadro a continuacion y presione <span class="search-key">enter</span>
+                    para hacer su busqueda
+                </p>
+                <p>Puede <span class="search-key">clickear en una definición</span> y se copiará automáticamente al portapapeles</p>
+                </p>
+                <input type="text" id="searchbar" placeholder="Buscar..." />
+            </div>
+            <div class="main-search-result">
+                <div class="search-result" id="search-result">
+                    <span class="result-placeholder">Cuando busque una palabra, su definicion aparecerá aquí</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="scripts/app.js"></script>
+</body>
+</html>
