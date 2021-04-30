@@ -1,6 +1,9 @@
+const { ipcRenderer } = require('electron');
+
 class App {
     constructor() {
         this.state = {
+            $closeButton: document.getElementById('close-button'),
             $changeThemeButton: document.getElementById('changetheme-button'),
             $currentTheme: document.getElementById('theme-link'),
             $searchBar: document.getElementById('searchbar'),
@@ -31,7 +34,12 @@ class App {
             this.state.$aboutModal.style.display = "block";
         }.bind(this));
 
-        // Close Button
+        // Close App Button
+        this.state.$closeButton.addEventListener('click', function() {
+            ipcRenderer.send('close-app');
+        })
+
+        // Close Modal Button
         document.querySelector('.close').onclick = function() {
             this.state.$aboutModal.style.display = "none";
         }.bind(this);

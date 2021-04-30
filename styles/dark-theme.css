@@ -18,6 +18,8 @@
 
 * {
     box-sizing: border-box;
+
+    transition: .25s background-color, .25s background;
 }
 
 html {
@@ -224,19 +226,18 @@ h4 {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #121212;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 5px;
-  
+  background: rgb(69, 218, 133);
+
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(88, 88, 88);
+  background: rgb(48, 201, 114);
 }
 
 input[type="text"] {
@@ -279,6 +280,7 @@ header {
     box-shadow: rgba(0,0,0,.3) 0px 5px 25px;
     font-size: 1em;
     padding: 0;
+    -webkit-app-region: drag;
 
     transition: .25s font-size, .25s height;
 }
@@ -287,6 +289,10 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.header-container > * {
+    -webkit-app-region: no-drag;
 }
 
 .logo {
@@ -298,6 +304,7 @@ header {
     list-style: none;
     display: flex;
     margin-right: 3em;
+    align-items: center;
 }
 
 .nav-item {
@@ -367,6 +374,7 @@ header {
 }
 
 .definition-example {
+    margin-top: .5em;
     display: block;
     text-align: center;
     font-weight: normal;
@@ -389,6 +397,7 @@ header {
 }
 
 .definition-container p {
+    margin: 0;
     transition: .25s color;
 }
 

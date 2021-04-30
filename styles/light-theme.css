@@ -18,6 +18,8 @@
 
 * {
     box-sizing: border-box;
+
+    transition: .25s background-color, .25s background;
 }
 
 html {
@@ -99,7 +101,7 @@ h4 {
 }
 
 .dark-enabled {
-    fill: #000;
+    fill: rgb(66, 66, 66);
 }
 
 .main-container {
@@ -220,9 +222,7 @@ h4 {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 5px;
-  
+  background: rgb(56, 56, 56);
 }
 
 /* Handle on hover */
@@ -272,6 +272,7 @@ header {
     font-size: 1em;
     padding: 0;
 
+    -webkit-app-region: drag;
     transition: .25s font-size, .25s height;
 }
 
@@ -281,6 +282,11 @@ header {
     align-items: center;
 }
 
+.header-container > * {
+    -webkit-app-region: no-drag;
+}
+
+
 .logo {
     font-size: 1.15em;
     margin-left: 3em;
@@ -289,6 +295,7 @@ header {
 .nav-items {
     list-style: none;
     display: flex;
+    align-items: center;
     margin-right: 3em;
 }
 
@@ -359,6 +366,7 @@ header {
 }
 
 .definition-example {
+    margin-top: .5em;
     display: block;
     text-align: center;
     font-size: .95em;
@@ -380,6 +388,7 @@ header {
 }
 
 .definition-container p {
+    margin: 0;
     font-size: 1.05em;
     font-weight: normal;
     transition: .25s color;
