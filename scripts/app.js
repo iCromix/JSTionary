@@ -46,9 +46,11 @@ class App {
             /// Theme Switch
         this.state.$changeThemeButton.addEventListener('click', function() {
             if (this.state.$currentTheme.getAttribute('href') == './styles/light-theme.css') {
+                window.localStorage.setItem('theme', 'dark-theme');
                 this.state.$currentTheme.setAttribute('href', './styles/dark-theme.css');
-                document.querySelector('.dark-enabled').classList.remove('dark-disabled')
+                document.querySelector('.dark-enabled').classList.remove('dark-disabled');
             } else {
+                window.localStorage.setItem('theme', 'light-theme');
                 this.state.$currentTheme.setAttribute('href', './styles/light-theme.css');
                 document.querySelector('.dark-enabled').classList.add('dark-disabled')
 
@@ -78,14 +80,12 @@ class App {
                 sel.removeAllRanges();
                 sel.addRange(r);
                 document.execCommand('Copy');
-                console.log(this);
                 new Notification('Definicion copiada!', { body: `La definicion de ${this.id} se copió al portapapeles`})
             })
         }
     }
 
     displayResult(result) {
-        console.log(result);
         const formatedResults = result.meanings[0].definitions.map(definition => `
             <div class="definition-container">
                 <p class="definition" id="${result.word.charAt(0).toUpperCase() + result.word.slice(1)}">
