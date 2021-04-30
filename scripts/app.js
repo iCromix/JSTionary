@@ -1,6 +1,8 @@
 class App {
     constructor() {
         this.state = {
+            $changeThemeButton: document.getElementById('changetheme-button'),
+            $currentTheme: document.getElementById('theme-link'),
             $searchBar: document.getElementById('searchbar'),
             $resultContainer: document.getElementById('search-result'),
             $aboutModal: document.getElementById('about-modal'),
@@ -40,6 +42,18 @@ class App {
                 this.state.$aboutModal.style.display = 'none';
             }
         }.bind(this)
+
+            /// Theme Switch
+        this.state.$changeThemeButton.addEventListener('click', function() {
+            if (this.state.$currentTheme.getAttribute('href') == './styles/light-theme.css') {
+                this.state.$currentTheme.setAttribute('href', './styles/dark-theme.css');
+                document.querySelector('.dark-enabled').classList.remove('dark-disabled')
+            } else {
+                this.state.$currentTheme.setAttribute('href', './styles/light-theme.css');
+                document.querySelector('.dark-enabled').classList.add('dark-disabled')
+
+            }
+        }.bind(this))
     }
 
     searchWord(word) {
