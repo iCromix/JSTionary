@@ -295,6 +295,19 @@ header {
     -webkit-app-region: no-drag;
 }
 
+#close-button {
+    background-color: transparent;
+    padding: 0;
+}
+
+.close-button-dark {
+    transition: .25s fill;
+}
+
+#close-button:hover .close-button-dark {
+    fill: rgb(69, 218, 133);
+}
+
 .logo {
     font-size: 1.15em;
     margin-left: 3em;

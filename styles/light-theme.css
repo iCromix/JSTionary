@@ -320,6 +320,22 @@ header {
     text-decoration: none;
 }
 
+
+
+.close-button-dark {
+    transition: .25s fill;
+}
+
+#close-button {
+    background-color: transparent;
+    padding: 0;
+}
+
+#close-button:hover .close-button-dark {
+    background-color: transparent;
+    fill: rgb(255, 166, 0);
+}
+
         /* Main */
 
 .main-content {
