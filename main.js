@@ -38,3 +38,7 @@ app.on('window-all-closed', () => {
 ipcMain.on('close-app', (evt, arg) => {
   app.quit();
 })
+
+ipcMain.on('minimize-app', (evt, arg) => {
+  BrowserWindow.getFocusedWindow().minimize();
+})

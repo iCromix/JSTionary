@@ -101,7 +101,7 @@ h4 {
 }
 
 .dark-enabled {
-    fill: rgb(66, 66, 66);
+    fill: rgb(255, 166, 0);
 }
 
 .main-container {
@@ -217,17 +217,17 @@ h4 {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: rgb(79, 82, 238);
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: rgb(56, 56, 56);
+  background: rgb(255, 166, 0);
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(88, 88, 88);
+  background: rgba(255, 166, 0, 0.8);
 }
 
 input[type="text"] {
@@ -273,7 +273,6 @@ header {
     padding: 0;
 
     -webkit-app-region: drag;
-    transition: .25s font-size, .25s height;
 }
 
 .header-container {
@@ -286,17 +285,29 @@ header {
     -webkit-app-region: no-drag;
 }
 
-
 .logo {
     font-size: 1.15em;
     margin-left: 3em;
 }
 
+.logo-text {
+    user-select: none;
+    padding-right: .75em;
+    -webkit-app-region: drag;
+}
+
 .nav-items {
+    padding: 0;
     list-style: none;
     display: flex;
     align-items: center;
     margin-right: 3em;
+    width: 100%;
+    -webkit-app-region: drag;
+}
+
+.nav-items > * {
+    -webkit-app-region: no-drag;
 }
 
 .nav-item {
@@ -312,7 +323,7 @@ header {
 }
 
 .nav-items > .nav-item {
-    margin-left: 2em;
+    margin-left: .5em;
 }
 
 .nav-item > a {
@@ -320,18 +331,29 @@ header {
     text-decoration: none;
 }
 
+/* Window Buttons */
+.window-buttons {
+    display: flex;
+    margin-left: auto;
+}
 
+.window-buttons div:last-child {
+    margin-left: 1em;
+
+}
 
 .close-button-dark {
     transition: .25s fill;
 }
 
-#close-button {
+#close-button,
+#minimize-button {
     background-color: transparent;
     padding: 0;
 }
 
-#close-button:hover .close-button-dark {
+#close-button:hover .close-button-dark,
+#minimize-button:hover .close-button-dark {
     background-color: transparent;
     fill: rgb(255, 166, 0);
 }

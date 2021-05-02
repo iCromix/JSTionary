@@ -1,8 +1,10 @@
 const { ipcRenderer } = require('electron');
+console.log(this)
 
 class App {
     constructor() {
         this.state = {
+            $minimizeButton: document.getElementById('minimize-button'),
             $closeButton: document.getElementById('close-button'),
             $changeThemeButton: document.getElementById('changetheme-button'),
             $currentTheme: document.getElementById('theme-link'),
@@ -33,6 +35,12 @@ class App {
             this.state.$aboutModal.classList.remove('hide');
             this.state.$aboutModal.style.display = "block";
         }.bind(this));
+
+        // Minimize App Button
+        this.state.$minimizeButton.addEventListener('click', function() {
+            console.log('click')
+            ipcRenderer.send('minimize-app');
+        })
 
         // Close App Button
         this.state.$closeButton.addEventListener('click', function() {

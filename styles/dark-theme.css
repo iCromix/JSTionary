@@ -97,6 +97,8 @@ h4 {
 }
 
     /* General Layout  */
+
+/* Dark Theme */
 .dark-disabled {
     fill: #000;
 
@@ -226,7 +228,7 @@ h4 {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #121212;
+  background: #303030;
 }
 
 /* Handle */
@@ -277,17 +279,14 @@ header {
     top: 0;
     width: 100%;
     background: #303030;
-    box-shadow: rgba(0,0,0,.3) 0px 5px 25px;
     font-size: 1em;
     padding: 0;
     -webkit-app-region: drag;
-
-    transition: .25s font-size, .25s height;
 }
 
 .header-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -295,7 +294,8 @@ header {
     -webkit-app-region: no-drag;
 }
 
-#close-button {
+#close-button,
+#minimize-button {
     background-color: transparent;
     padding: 0;
 }
@@ -304,6 +304,7 @@ header {
     transition: .25s fill;
 }
 
+#minimize-button:hover .close-button-dark,
 #close-button:hover .close-button-dark {
     fill: rgb(69, 218, 133);
 }
@@ -313,11 +314,24 @@ header {
     margin-left: 3em;
 }
 
+.logo-text {
+    user-select: none;
+    padding-right: .75em;
+    -webkit-app-region: drag;
+}
+
 .nav-items {
+    padding: 0;
     list-style: none;
     display: flex;
     margin-right: 3em;
     align-items: center;
+    width: 100%;
+    -webkit-app-region: drag;
+}
+
+.nav-items > * {
+    -webkit-app-region: no-drag;
 }
 
 .nav-item {
@@ -333,12 +347,23 @@ header {
 }
 
 .nav-items > .nav-item {
-    margin-left: 2em;
+    margin-left: .5em;
 }
 
 .nav-item > a {
     color: inherit;
     text-decoration: none;
+}
+
+/* Window Buttons */
+.window-buttons {
+    display: flex;
+    margin-left: auto;
+}
+
+.window-buttons div:last-child {
+    margin-left: 1em;
+
 }
 
         /* Main */
