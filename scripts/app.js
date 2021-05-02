@@ -1,5 +1,4 @@
 const { ipcRenderer } = require('electron');
-console.log(this)
 
 class App {
     constructor() {
@@ -38,7 +37,6 @@ class App {
 
         // Minimize App Button
         this.state.$minimizeButton.addEventListener('click', function() {
-            console.log('click')
             ipcRenderer.send('minimize-app');
         })
 
