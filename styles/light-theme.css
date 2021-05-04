@@ -403,6 +403,8 @@ header {
     align-items: stretch;
 }
 
+    /* Definitions  */
+
 .definition-example {
     margin-top: .5em;
     display: block;
@@ -441,6 +443,11 @@ header {
     min-width: 400px;
     max-width: 400px;
     cursor: pointer;
+}
+
+.definition-bookmark {
+    right: 155;
+    position: absolute;
 }
 
     /* Errors  */
