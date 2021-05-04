@@ -263,6 +263,7 @@ input[type="text"]:focus::placeholder {
     /* Header  */
 
 header {
+    z-index: 99;
     position: sticky;
     top: 0;
     width: 100%;
@@ -446,8 +447,17 @@ header {
 }
 
 .definition-bookmark {
+    cursor: pointer;
     right: 155;
     position: absolute;
+}
+
+.bookmark-icon {
+    transition: fill .25s;
+}
+
+.definition-bookmark:hover .bookmark-icon {
+    fill: rgb(255, 166, 0);
 }
 
     /* Errors  */

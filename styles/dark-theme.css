@@ -275,6 +275,7 @@ input[type="text"]:focus::placeholder {
     /* Header  */
 
 header {
+    z-index: 99;
     position: sticky;
     top: 0;
     width: 100%;

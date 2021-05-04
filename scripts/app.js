@@ -103,13 +103,13 @@ class App {
         const formatedResults = result.meanings[0].definitions.map(definition => `
             <div class="definition-container">
                 <div class="definition-bookmark">
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" height="48" width="24" viewBox="0 0 122.59 122.88" style="enable-background:new 0 0 122.59 122.88" xml:space="preserve"><g><path d="M4.95,0h112.68c2.74,0,4.95,2.22,4.95,4.95v112.97c0,2.74-2.22,4.95-4.95,4.95c-1.37,0-2.61-0.56-3.51-1.46L61.16,75.79 L8.18,121.66c-2.06,1.78-5.18,1.56-6.97-0.5c-0.81-0.93-1.2-2.09-1.2-3.23H0V4.95C0,2.22,2.22,0,4.95,0L4.95,0z M112.68,9.91H9.91 v97.2l47.97-41.54c1.82-1.62,4.61-1.68,6.51-0.04l48.3,41.61V9.91L112.68,9.91z"/></g></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" height="48" width="24" viewBox="0 0 122.59 122.88" style="enable-background:new 0 0 122.59 122.88" xml:space="preserve"><g><path class="bookmark-icon" d="M4.95,0h112.68c2.74,0,4.95,2.22,4.95,4.95v112.97c0,2.74-2.22,4.95-4.95,4.95c-1.37,0-2.61-0.56-3.51-1.46L61.16,75.79 L8.18,121.66c-2.06,1.78-5.18,1.56-6.97-0.5c-0.81-0.93-1.2-2.09-1.2-3.23H0V4.95C0,2.22,2.22,0,4.95,0L4.95,0z M112.68,9.91H9.91 v97.2l47.97-41.54c1.82-1.62,4.61-1.68,6.51-0.04l48.3,41.61V9.91L112.68,9.91z"/></g></svg>
                 </div>
-                <p class="definition" id="${result.word.charAt(0).toUpperCase() + result.word.slice(1)}">
+                <p class="definition">
                     ${definition.definition}
                 </p>
                 ${definition.example ? `
-                    <span class="definition-example">
+                    <span class="definition-example" id="${definition.example}">
                         "${definition.example}"
                     </span>
                 ` : '<div style="display: none"></div>' }
@@ -118,7 +118,7 @@ class App {
 
         this.state.$resultContainer.innerHTML = `
             <div class="result hide">
-                <h3 class="word" style="${result.word.length > 14 ? 'font-size: 3em' : 'font-size: 3em'}">${result.word}</h3>
+                <h3 class="word" style="${result.word.length > 14 ? 'font-size: 3em' : 'font-size: 4em'}">${result.word}</h3>
                 <h4>${result.meanings[0].definitions.length > 1 ? 'Significados' : 'Signficado'}</h4>
                 ${formatedResults.map(result => {
                     return result;
@@ -131,6 +131,7 @@ class App {
         document.querySelector('.result').classList.remove('hide');
         this.addListenersToDefinitions();
         this.addSearchAgainListener();
+        this.addBookmarkIconsListeners();
     }
 
     displayError(wasEmptyInput) {
@@ -167,6 +168,15 @@ class App {
             this.state.$searchBar.value = "";
             this.state.$searchBar.focus();
         }.bind(this))
+    }
+
+    addBookmarkIconsListeners() {
+        const bookmarks = document.querySelectorAll('.definition-bookmark');
+        for (let i = 0; i < bookmarks.length; i++) {
+            bookmarks[i].addEventListener('click', function() {
+                console.log(this.parentElement);
+            })
+        }
     }
 
     displayLoading() {
