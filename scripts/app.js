@@ -1,4 +1,9 @@
 const { ipcRenderer } = require('electron');
+const Datastore = require('nedb');
+const db = new Datastore({ filename: `${__dirname}/db/wordsdb`});
+db.loadDatabase(function(err) {
+    err ? console.log(err) : console.log('DB Loaded');
+})
 
 class App {
     constructor() {
@@ -94,12 +99,13 @@ class App {
                 sel.removeAllRanges();
                 sel.addRange(r);
                 document.execCommand('Copy');
-                new Notification('Definicion copiada!', { body: `La definicion de ${this.id} se copió al portapapeles`})
+                new Notification('Definicion copiada!', { body: `La definicion de ${this.id} se copió al portapapeles` })
             })
         }
     }
 
     displayResult(result) {
+        console.log(this.state)
         const formatedResults = result.meanings[0].definitions.map(definition => `
             <div class="definition-container">
                 <div class="definition-bookmark">
@@ -170,11 +176,32 @@ class App {
         }.bind(this))
     }
 
+    createDbObject(object, word) {
+        const hasExample = object.parentElement.parentElement.childNodes[5] ? object.parentElement.parentElement.childNodes[5].innerText : null;
+        return {
+            word,
+            definition: object.parentElement.parentElement.childNodes[3].innerText,
+            example: hasExample
+        }
+    }
+
     addBookmarkIconsListeners() {
         const bookmarks = document.querySelectorAll('.definition-bookmark');
         for (let i = 0; i < bookmarks.length; i++) {
-            bookmarks[i].addEventListener('click', function() {
-                console.log(this.parentElement);
+            bookmarks[i].addEventListener('click', function(e) {
+                db.findOne({ definition: e.target.parentElement.parentElement.childNodes[3].innerText }, (err, doc) => {
+                    if (!doc) {
+                        const wordObject = this.createDbObject(e.target, document.querySelector('.word').innerText)
+                        db.insert(wordObject, function(err, doc) {
+                            if (err) {
+                                console.err(err);
+                            }
+                            console.log(`Agregado elemento ${doc.word} con id ${doc._id}`);
+                        })
+                    } else {
+                        console.error('Ya agregaste esa definicion');
+                    }
+                })
             })
         }
     }
