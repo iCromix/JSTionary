@@ -1,9 +1,6 @@
 const { ipcRenderer } = require('electron');
-const Datastore = require('nedb');
-const db = new Datastore({ filename: `${__dirname}/db/wordsdb`});
-db.loadDatabase(function(err) {
-    err ? console.log(err) : console.log('DB Loaded');
-})
+const PouchDB = require('pouchdb');
+const db = new PouchDB('wordsdb');
 
 class App {
     constructor() {
@@ -11,11 +8,13 @@ class App {
             $minimizeButton: document.getElementById('minimize-button'),
             $closeButton: document.getElementById('close-button'),
             $changeThemeButton: document.getElementById('changetheme-button'),
-            $currentTheme: document.getElementById('theme-link'),
             $searchBar: document.getElementById('searchbar'),
             $resultContainer: document.getElementById('search-result'),
             $aboutModal: document.getElementById('about-modal'),
-            searchQuery: ''
+
+            searchQuery: '',
+            currentTheme: document.getElementById('theme-link'),
+            currentWord: ''
         }
 
         this.addListeners();
@@ -64,13 +63,13 @@ class App {
 
             /// Theme Switch
         this.state.$changeThemeButton.addEventListener('click', function() {
-            if (this.state.$currentTheme.getAttribute('href') == './styles/light-theme.css') {
+            if (this.state.currentTheme.getAttribute('href') === './styles/light-theme.css') {
                 window.localStorage.setItem('theme', 'dark-theme');
-                this.state.$currentTheme.setAttribute('href', './styles/dark-theme.css');
+                this.state.currentTheme.setAttribute('href', './styles/dark-theme.css');
                 document.querySelector('.dark-enabled').classList.remove('dark-disabled');
             } else {
                 window.localStorage.setItem('theme', 'light-theme');
-                this.state.$currentTheme.setAttribute('href', './styles/light-theme.css');
+                this.state.currentTheme.setAttribute('href', './styles/light-theme.css');
                 document.querySelector('.dark-enabled').classList.add('dark-disabled')
 
             }
@@ -176,34 +175,31 @@ class App {
         }.bind(this))
     }
 
-    createDbObject(object, word) {
-        const hasExample = object.parentElement.parentElement.childNodes[5] ? object.parentElement.parentElement.childNodes[5].innerText : null;
-        return {
-            word,
-            definition: object.parentElement.parentElement.childNodes[3].innerText,
-            example: hasExample
-        }
-    }
-
     addBookmarkIconsListeners() {
-        const bookmarks = document.querySelectorAll('.definition-bookmark');
-        for (let i = 0; i < bookmarks.length; i++) {
-            bookmarks[i].addEventListener('click', function(e) {
-                db.findOne({ definition: e.target.parentElement.parentElement.childNodes[3].innerText }, (err, doc) => {
-                    if (!doc) {
-                        const wordObject = this.createDbObject(e.target, document.querySelector('.word').innerText)
-                        db.insert(wordObject, function(err, doc) {
-                            if (err) {
-                                console.err(err);
-                            }
-                            console.log(`Agregado elemento ${doc.word} con id ${doc._id}`);
-                        })
-                    } else {
-                        console.error('Ya agregaste esa definicion');
-                    }
-                })
-            })
-        }
+        // const bookmarks = document.querySelectorAll('.definition-bookmark');
+        // for (let i = 0; i < bookmarks.length; i++) {
+        //     bookmarks[i].addEventListener('click', function(e) {
+        //         db.get(e.target.parentElement.parentElement.childNodes[3].innerText)
+        //             .then(() => console.log('Ya agregaste esa definicion'))
+        //             .catch(err => {
+        //                 db.put({
+
+        //                 })
+        //             })
+            //     db.findOne({ definition: e.target.parentElement.parentElement.childNodes[3].innerText }, (err, doc) => {
+            //         if (!doc) {
+            //             const wordObject = this.createDbObject(e.target, document.querySelector('.word').innerText)
+            //             db.insert(wordObject, function(err, doc) {
+            //                 if (err) {
+            //                     console.err(err);
+            //                 }
+            //                 console.log(`Agregado elemento ${doc.word} con id ${doc._id}`);
+            //             })
+            //         } else {
+            //             console.error('Ya agregaste esa definicion');
+            //         }
+            //     })
+            // })
     }
 
     displayLoading() {
