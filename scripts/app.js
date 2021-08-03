@@ -115,7 +115,7 @@ class App {
     displayResult(result) {
         console.log(this.state)
         const formatedResults = result.meanings[0].definitions.map(definition => `
-            <div class="definition-container">
+            <div class="definition-container" id="${definition.definition}">
                 <p class="definition">
                     ${definition.definition}
                 </p>
@@ -146,6 +146,7 @@ class App {
         document.querySelector('.result').classList.remove('hide');
         this.addListenersToDefinitions();
         this.addSearchAgainListener();
+        this.addSaveButtonListener();
     }
 
     displayError(wasEmptyInput) {
@@ -184,7 +185,14 @@ class App {
         }.bind(this))
     }
 
-    addBookmarkIconsListeners() {
+    addSaveButtonListener() {
+        const buttons = document.querySelectorAll('.definition-button');
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener('click', e => {
+                console.log( { definition: e.target.parentElement.parentElement.childNodes[1].innerHTML, example: e.target.parentElement.parentElement.childNodes[3].innerHTML });
+                //addWord(db, { word: this.state.currentWord, definition: e.target.parentElement.parentElement.childNodes[3].innerText })
+            })
+        }
         // const bookmarks = document.querySelectorAll('.definition-bookmark');
         // for (let i = 0; i < bookmarks.length; i++) {
         //     bookmarks[i].addEventListener('click', function(e) {
