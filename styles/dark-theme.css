@@ -585,3 +585,45 @@ header {
     left: -100%;
     background-color: whitesmoke;
 }
+
+    /*  Notification Panel  */
+
+.notification-container {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    opacity: 1;
+    z-index: 2;
+    text-align: center;
+    border-radius: 5px;
+    left: 32%;
+    background-color: #121212;
+    color: whitesmoke;
+    width: 300px;
+    height: 50px;
+    box-shadow: rgba(0,0,0,.7) 1px 1px 30px 5px;
+
+    transition: opacity .5s, transform .25s, background-color .25s, color .25s;
+}
+
+.notification-body {
+    color: inherit;
+}
+
+.notification-success {
+    transform: translateY(100px);
+    z-index: 2;
+    opacity: 1;
+    background-color: rgb(69, 218, 133);
+    color: #121212;
+}
+
+.notification-error {
+    transform: translateY(100px);
+    z-index: 2;
+    opacity: 1;
+    background-color: rgb(255, 81, 81);
+    color: whitesmoke;
+}

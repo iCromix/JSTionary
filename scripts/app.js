@@ -2,6 +2,7 @@ const { ipcRenderer } = require('electron');
 const Database = require('better-sqlite3');
 const db = new Database('./db/dictionary.db');
 const { listWords, removeDefinition, addWord, clearWords } = require('./dbF');
+const VERSION = "1.2.0";
 
 // DB
 db.prepare(`
@@ -21,16 +22,23 @@ class App {
             $searchBar: document.getElementById('searchbar'),
             $resultContainer: document.getElementById('search-result'),
             $aboutModal: document.getElementById('about-modal'),
+            $notificationContainer: document.querySelector('.notification-container'),
 
             searchQuery: '',
             currentTheme: document.getElementById('theme-link'),
-            currentWord: ''
+            currentWord: '',
+            currentNotificationTimeout: undefined
         }
+        this.setVersion(VERSION);
         this.addListeners();
     }
 
+    setVersion(version) {
+        document.querySelector('#version').innerHTML = "JSTionary " + version;
+    }
+
     addListeners() {
-         /// SearchBar
+        /// SearchBar
         this.state.$searchBar.addEventListener('keypress', function(e) {
             if (e.charCode === 13) {
                 this.searchWord(this.state.$searchBar.value);
@@ -93,7 +101,10 @@ class App {
         this.displayLoading();
         fetch(`https://api.dictionaryapi.dev/api/v2/entries/es/${this.state.$searchBar.value}`)
             .then(resp => resp.json())
-            .then(data => this.displayResult(data[0]))
+            .then(data => {
+                this.state.currentWord = word;
+                this.displayResult(data[0])
+            })
             .catch(() => this.displayError());
     }
 
@@ -178,6 +189,27 @@ class App {
         }
     }
 
+    displayNotification(notificationObject, notificationTime=2000) {
+        if (notificationObject.error) {
+            this.state.$notificationContainer.classList.add('notification-error');
+            document.querySelector('#notification-content').innerHTML = `
+                ${notificationObject.message}
+            `
+            setTimeout(() => {
+                this.state.$notificationContainer.classList.remove('notification-error');
+            }, notificationTime);
+            return;
+        }
+        this.state.$notificationContainer.classList.add('notification-success');
+        document.querySelector('#notification-content').innerHTML = `
+            ${notificationObject.message}
+        `
+
+        setTimeout(() => {
+            this.state.$notificationContainer.classList.remove('notification-success');
+        }, notificationTime);
+    }
+
     addSearchAgainListener() {
         document.querySelector('.search-again').addEventListener('click', function() {
             this.state.$searchBar.value = "";
@@ -189,8 +221,16 @@ class App {
         const buttons = document.querySelectorAll('.definition-button');
         for (let i = 0; i < buttons.length; i++) {
             buttons[i].addEventListener('click', e => {
-                console.log( { definition: e.target.parentElement.parentElement.childNodes[1].innerHTML, example: e.target.parentElement.parentElement.childNodes[3].innerHTML });
-                //addWord(db, { word: this.state.currentWord, definition: e.target.parentElement.parentElement.childNodes[3].innerText })
+                try {
+                    addWord(db, { word: this.state.currentWord, definition: e.target.parentElement.parentElement.childNodes[1].innerText, example: e.target.parentElement.parentElement.childNodes[3].innerText })
+                } catch(e) {
+                    if (e.message.includes("UNIQUE")) {
+                        this.displayNotification({ error: true, message: "Ya agregaste esta definicion." });
+                        return;
+                    }
+                }
+                this.displayNotification({ message: "Definicion agregada con éxito" });
+                listWords(db);
             })
         }
         // const bookmarks = document.querySelectorAll('.definition-bookmark');
