@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
-    "pouchdb": "^7.2.2"
+    "sqlite3": "^5.0.2"
   },
   "config": {
     "forge": {

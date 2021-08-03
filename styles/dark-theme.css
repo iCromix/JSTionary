@@ -536,3 +536,9 @@ header {
     transform: rotate(360deg);
   }
 }
+
+.saved-words-container {
+    position: absolute;
+    left: -100%;
+    background-color: whitesmoke;
+}

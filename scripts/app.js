@@ -1,6 +1,4 @@
 const { ipcRenderer } = require('electron');
-const PouchDB = require('pouchdb');
-const db = new PouchDB('wordsdb');
 
 class App {
     constructor() {
@@ -16,7 +14,6 @@ class App {
             currentTheme: document.getElementById('theme-link'),
             currentWord: ''
         }
-
         this.addListeners();
     }
 
@@ -61,7 +58,7 @@ class App {
             }
         }.bind(this)
 
-            /// Theme Switch
+        /// Theme Switch
         this.state.$changeThemeButton.addEventListener('click', function() {
             if (this.state.currentTheme.getAttribute('href') === './styles/light-theme.css') {
                 window.localStorage.setItem('theme', 'dark-theme');
@@ -85,7 +82,7 @@ class App {
         fetch(`https://api.dictionaryapi.dev/api/v2/entries/es/${this.state.$searchBar.value}`)
             .then(resp => resp.json())
             .then(data => this.displayResult(data[0]))
-            .catch(e => this.displayError());
+            .catch(() => this.displayError());
     }
 
     addListenersToDefinitions() {
