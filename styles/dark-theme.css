@@ -419,6 +419,8 @@ header {
     font-weight: normal;
     font-size: .95em;
     font-style: italic;
+
+    transition: margin-bottom .5s;
 }
 
 .definition-container {
@@ -435,6 +437,10 @@ header {
     transition: .25s background-color;
 }
 
+.definition-container:hover .definition-example {
+    margin-bottom: .5em;
+}
+
 .definition-container p {
     margin: 0;
     transition: .25s color;
@@ -449,6 +455,43 @@ header {
     min-width: 400px;
     max-width: 400px;
     cursor: pointer;
+}
+
+.definition-button {
+    font-family: inherit;
+    font-weight: bold;
+    background-color: rgb(69, 218, 133);
+    color: #121212;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    padding: .5em 1em;
+    opacity: 0%;
+    pointer-events: none;
+
+    transition: opacity .5s, background-color .5s;
+}
+
+.definition-button:hover {
+    background-color: rgb(69, 218, 150);
+}
+
+.definition-button-container {
+    display: flex;
+    justify-content: flex-end;
+    height: 0px;
+
+    transition: height .5s;
+}
+
+.definition-container:hover .definition-button-container {
+    height: 35px;
+}
+
+.definition-container:hover .definition-button {
+    pointer-events: all;
+    cursor: pointer;
+    opacity: 100%;
 }
 
     /* Errors  */

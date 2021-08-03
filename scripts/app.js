@@ -1,4 +1,16 @@
 const { ipcRenderer } = require('electron');
+const Database = require('better-sqlite3');
+const db = new Database('./db/dictionary.db');
+const { listWords, removeDefinition, addWord, clearWords } = require('./dbF');
+
+// DB
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS words(
+        word TEXT NOT NULL,
+        definition TEXT NOT NULL UNIQUE,
+        example TEXT
+    );
+`).run();
 
 class App {
     constructor() {
@@ -104,9 +116,6 @@ class App {
         console.log(this.state)
         const formatedResults = result.meanings[0].definitions.map(definition => `
             <div class="definition-container">
-                <div class="definition-bookmark">
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" height="48" width="24" viewBox="0 0 122.59 122.88" style="enable-background:new 0 0 122.59 122.88" xml:space="preserve"><g><path class="bookmark-icon" d="M4.95,0h112.68c2.74,0,4.95,2.22,4.95,4.95v112.97c0,2.74-2.22,4.95-4.95,4.95c-1.37,0-2.61-0.56-3.51-1.46L61.16,75.79 L8.18,121.66c-2.06,1.78-5.18,1.56-6.97-0.5c-0.81-0.93-1.2-2.09-1.2-3.23H0V4.95C0,2.22,2.22,0,4.95,0L4.95,0z M112.68,9.91H9.91 v97.2l47.97-41.54c1.82-1.62,4.61-1.68,6.51-0.04l48.3,41.61V9.91L112.68,9.91z"/></g></svg>
-                </div>
                 <p class="definition">
                     ${definition.definition}
                 </p>
@@ -114,7 +123,11 @@ class App {
                     <span class="definition-example" id="${definition.example}">
                         "${definition.example}"
                     </span>
-                ` : '<div style="display: none"></div>' }
+                ` : '<div style="display: none"></div>'
+                }
+                <div class="definition-button-container">
+                    <button class="definition-button">Guardar</button>
+                </div>
             </div>
         `);
 
@@ -133,7 +146,6 @@ class App {
         document.querySelector('.result').classList.remove('hide');
         this.addListenersToDefinitions();
         this.addSearchAgainListener();
-        this.addBookmarkIconsListeners();
     }
 
     displayError(wasEmptyInput) {
