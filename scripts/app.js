@@ -25,6 +25,7 @@ class App {
             $notificationContainer: document.querySelector('.notification-container'),
             $savedWordsContainer: document.querySelector('.saved-words-container'),
             $savedWordsButton: document.querySelector('#saved-words-button'),
+            $savedWordsContent: document.querySelector('#saved-words-content'),
 
             searchQuery: '',
             currentTheme: document.getElementById('theme-link'),
@@ -215,6 +216,22 @@ class App {
         }, notificationTime);
     }
 
+    displaySavedWords = () => {
+        const { $savedWordsContent } = this.state;
+        const words = getUniqueWords(db);
+        if (!words.length) {
+            $savedWordsContent.innerHTML = `
+                <p class="result-placeholder">No tienes palabras guardadas.</p>
+            `
+            return;
+        }
+        console.log(words);
+        const filteredWords = words.map(({word}) => `<p class="saved-word">${word}</p>`).join('');
+        $savedWordsContent.innerHTML = `
+                ${filteredWords}
+        `;
+    }
+
     toggleSavedWords = () => {
         function containsClass(arr, className) {
             for (let i = 0; i < arr.length; i++) {
@@ -230,6 +247,7 @@ class App {
             $savedWordsContainer.classList.remove("saved-words-active");
         } else {
             $savedWordsContainer.classList.add("saved-words-active");
+            this.displaySavedWords();
         }
     }
 
