@@ -1,7 +1,7 @@
 const { ipcRenderer } = require('electron');
 const Database = require('better-sqlite3');
 const db = new Database('./db/dictionary.db');
-const { listWords, removeDefinition, addWord, clearWords } = require('./dbF');
+const { listWords, getUniqueWords, addWord, clearWords } = require('./dbF');
 const VERSION = "1.2.0";
 
 // DB
@@ -23,6 +23,8 @@ class App {
             $resultContainer: document.getElementById('search-result'),
             $aboutModal: document.getElementById('about-modal'),
             $notificationContainer: document.querySelector('.notification-container'),
+            $savedWordsContainer: document.querySelector('.saved-words-container'),
+            $savedWordsButton: document.querySelector('#saved-words-button'),
 
             searchQuery: '',
             currentTheme: document.getElementById('theme-link'),
@@ -55,6 +57,9 @@ class App {
             this.state.$aboutModal.classList.remove('hide');
             this.state.$aboutModal.style.display = "block";
         }.bind(this));
+
+        // Toggle Saved Words Button
+        this.state.$savedWordsButton.addEventListener('click', this.toggleSavedWords)
 
         // Minimize App Button
         this.state.$minimizeButton.addEventListener('click', function() {
@@ -210,6 +215,24 @@ class App {
         }, notificationTime);
     }
 
+    toggleSavedWords = () => {
+        function containsClass(arr, className) {
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i] == className) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        const { $savedWordsContainer } = this.state;
+        if (containsClass($savedWordsContainer.classList, "saved-words-active")) {
+            $savedWordsContainer.classList.remove("saved-words-active");
+        } else {
+            $savedWordsContainer.classList.add("saved-words-active");
+        }
+    }
+
     addSearchAgainListener() {
         document.querySelector('.search-again').addEventListener('click', function() {
             this.state.$searchBar.value = "";
@@ -233,30 +256,6 @@ class App {
                 listWords(db);
             })
         }
-        // const bookmarks = document.querySelectorAll('.definition-bookmark');
-        // for (let i = 0; i < bookmarks.length; i++) {
-        //     bookmarks[i].addEventListener('click', function(e) {
-        //         db.get(e.target.parentElement.parentElement.childNodes[3].innerText)
-        //             .then(() => console.log('Ya agregaste esa definicion'))
-        //             .catch(err => {
-        //                 db.put({
-
-        //                 })
-        //             })
-            //     db.findOne({ definition: e.target.parentElement.parentElement.childNodes[3].innerText }, (err, doc) => {
-            //         if (!doc) {
-            //             const wordObject = this.createDbObject(e.target, document.querySelector('.word').innerText)
-            //             db.insert(wordObject, function(err, doc) {
-            //                 if (err) {
-            //                     console.err(err);
-            //                 }
-            //                 console.log(`Agregado elemento ${doc.word} con id ${doc._id}`);
-            //             })
-            //         } else {
-            //             console.error('Ya agregaste esa definicion');
-            //         }
-            //     })
-            // })
     }
 
     displayLoading() {

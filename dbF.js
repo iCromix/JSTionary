@@ -16,6 +16,11 @@ module.exports = {
     stmt.run();
   },
 
+  getUniqueWords: db => {
+    const stmt = db.prepare('SELECT DISTINCT word FROM words');
+    return stmt.all();
+  },
+  
   // Dev
   listWords: (db) => {
     // Lists all words in the db on the console
