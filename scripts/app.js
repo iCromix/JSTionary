@@ -1,7 +1,7 @@
 const { ipcRenderer } = require('electron');
 const Database = require('better-sqlite3');
 const db = new Database('./db/dictionary.db');
-const { listWords, getUniqueWords, addWord, clearWords } = require('./dbF');
+const { listWords, getUniqueWords, addWord, clearWords, getWordDefinitions } = require('./dbF');
 const VERSION = "1.2.0";
 
 // DB
@@ -26,11 +26,12 @@ class App {
             $savedWordsContainer: document.querySelector('.saved-words-container'),
             $savedWordsButton: document.querySelector('#saved-words-button'),
             $savedWordsContent: document.querySelector('#saved-words-content'),
+            $savedWordsTitleContainer: document.querySelector('.saved-words-title-container'),
+            $savedWordsTitle: document.querySelector('#saved-words-title'),
 
             searchQuery: '',
             currentTheme: document.getElementById('theme-link'),
-            currentWord: '',
-            currentNotificationTimeout: undefined
+            currentWord: ''
         }
         this.setVersion(VERSION);
         this.addListeners();
@@ -124,16 +125,17 @@ class App {
                 sel.removeAllRanges();
                 sel.addRange(r);
                 document.execCommand('Copy');
+                console.log(this);
                 new Notification('Definicion copiada!', { body: `La definicion de ${this.id} se copió al portapapeles` })
             })
         }
     }
 
     displayResult(result) {
-        console.log(this.state)
+        console.log(this.state);
         const formatedResults = result.meanings[0].definitions.map(definition => `
             <div class="definition-container" id="${definition.definition}">
-                <p class="definition">
+                <p class="definition" id="${result.word}">
                     ${definition.definition}
                 </p>
                 ${definition.example ? `
@@ -225,11 +227,60 @@ class App {
             `
             return;
         }
-        console.log(words);
         const filteredWords = words.map(({word}) => `<p class="saved-word">${word}</p>`).join('');
         $savedWordsContent.innerHTML = `
                 ${filteredWords}
         `;
+
+        this.addListenersToSavedWords();
+    }
+
+    addListenersToSavedWords() {
+        document.querySelectorAll('.saved-word').forEach(savedWord => {
+            savedWord.addEventListener('click', (event) => {
+                this.displaySavedWord(event.target.innerText);
+            })
+        })
+    }
+
+    displaySavedWord(word) {
+        const { $savedWordsContent, $savedWordsTitle, $savedWordsTitleContainer } = this.state;
+        const definitions = getWordDefinitions(db, word);
+        const filteredDefinitions = definitions.map(definition => `
+            <div class="definition-container">
+                <p class="definition">${definition.definition}</p>
+                ${definition.example ? `<span class="definition-example">${definition.example}</span>` : `<div style="display": none></div>"`}
+            </div>
+        `).join('');
+
+        $savedWordsTitleContainer.innerHTML = `
+            <h3 class="saved-words-back-button">< Atrás</h3>
+            <h3 class="saved-words-title" id="saved-words-title">${word}</h3>
+        `;
+
+        // Reset
+        this.state.$savedWordsTitle = document.querySelector('#saved-words-title');
+        $savedWordsContent.innerHTML = `
+            <div class="saved-definitions-container">               
+                ${filteredDefinitions}
+            </div>
+        `;
+
+        // Add listener to back button.
+        document.querySelector('.saved-words-back-button').addEventListener('click', () => {
+            this.resetSavedWordsTitle();
+            this.displaySavedWords();
+        });
+    }
+
+    resetSavedWordsTitle() {
+        const { $savedWordsTitleContainer } = this.state;
+        const currentTitle = document.querySelector('#saved-words-title');
+            if (currentTitle.innerText !== 'Palabras guardadas') {
+                $savedWordsTitleContainer.innerHTML = `
+                    <h3 class="saved-words-title" id="saved-words-title">Palabras guardadas</h3>
+                `;
+            }
     }
 
     toggleSavedWords = () => {
@@ -242,11 +293,21 @@ class App {
             return false;
         }
 
-        const { $savedWordsContainer } = this.state;
+        const { $savedWordsContainer, $savedWordsTitle, $savedWordsTitleContainer } = this.state;
+        const currentTitle = document.querySelector('#saved-words-title');
         if (containsClass($savedWordsContainer.classList, "saved-words-active")) {
             $savedWordsContainer.classList.remove("saved-words-active");
+            if (currentTitle.innerText !== 'Palabras guardadas') {
+                $savedWordsTitleContainer.innerHTML = `
+                    <h3 class="saved-words-title" id="saved-words-title">Palabras guardadas</h3>
+                `;
+            }
+            setTimeout(() => {
+                document.querySelector('body').style.overflowY = "auto";
+            }, 500)
         } else {
             $savedWordsContainer.classList.add("saved-words-active");
+            document.querySelector('body').style.overflowY = "hidden";
             this.displaySavedWords();
         }
     }

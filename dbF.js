@@ -20,6 +20,11 @@ module.exports = {
     const stmt = db.prepare('SELECT DISTINCT word FROM words');
     return stmt.all();
   },
+
+  getWordDefinitions: (db, word) => {
+    const stmt = db.prepare(`SELECT * FROM words WHERE word = ?`);
+    return stmt.all(word);
+  },
   
   // Dev
   listWords: (db) => {
