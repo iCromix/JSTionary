@@ -419,7 +419,7 @@ header {
     display: block;
     text-align: center;
     font-weight: normal;
-    font-size: .95em;
+    font-size: .90em;
     font-style: italic;
 
     transition: margin-bottom .5s;
@@ -659,16 +659,27 @@ header {
 }
 
 .saved-words-title {
+    font-size: 1.5em;
     text-align: center;
 }
 
 
 .saved-words-back-button {
+    font-size: 1.17em;
+    border-radius: 5px;
+    background: #121212;
+    padding: .5em;
     top: -4em;
-    left: -10em;
+    left: -8em;
     position: absolute;
     margin-top: 5em;
     margin-right: 1em;
+    transition: color .25s;
+}
+
+.saved-words-back-button:hover {
+    color: rgb(69,218,133);
+    cursor: pointer;
 }
 
 .saved-words-title::after {

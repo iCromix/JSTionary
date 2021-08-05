@@ -13,6 +13,8 @@ db.prepare(`
     );
 `).run();
 
+clearWords(db);
+
 class App {
     constructor() {
         this.state = {
@@ -31,7 +33,10 @@ class App {
 
             searchQuery: '',
             currentTheme: document.getElementById('theme-link'),
-            currentWord: ''
+            currentWord: '',
+            savedWordsOpened: false,
+            hasSavedWord: false,
+            isInDefinition: false
         }
         this.setVersion(VERSION);
         this.addListeners();
@@ -106,7 +111,7 @@ class App {
             return;
         }
         this.displayLoading();
-        fetch(`https://api.dictionaryapi.dev/api/v2/entries/es/${this.state.$searchBar.value}`)
+        fetch(`https://api.dictionaryapi.dev/api/v2/entries/es/${this.state.$searchBar.value.toLowerCase()}`)
             .then(resp => resp.json())
             .then(data => {
                 this.state.currentWord = word;
@@ -219,7 +224,9 @@ class App {
     }
 
     displaySavedWords = () => {
-        const { $savedWordsContent } = this.state;
+        const { $savedWordsContent, savedWordsOpened } = this.state;
+        if (!savedWordsOpened) this.state.savedWordsOpened = true;
+
         const words = getUniqueWords(db);
         if (!words.length) {
             $savedWordsContent.innerHTML = `
@@ -238,18 +245,20 @@ class App {
     addListenersToSavedWords() {
         document.querySelectorAll('.saved-word').forEach(savedWord => {
             savedWord.addEventListener('click', (event) => {
+                this.state.isInDefinition = true;
                 this.displaySavedWord(event.target.innerText);
             })
         })
     }
 
     displaySavedWord(word) {
-        const { $savedWordsContent, $savedWordsTitle, $savedWordsTitleContainer } = this.state;
+        const { $savedWordsContent, $savedWordsTitleContainer } = this.state;
         const definitions = getWordDefinitions(db, word);
+        console.log(definitions);
         const filteredDefinitions = definitions.map(definition => `
             <div class="definition-container">
-                <p class="definition">${definition.definition}</p>
-                ${definition.example ? `<span class="definition-example">${definition.example}</span>` : `<div style="display": none></div>"`}
+                <p class="definition" id="${word}">${definition.definition}</p>
+                ${definition.example ? `<span class="definition-example">"${definition.example}"</span>` : `<div style="display: none"></div>`}
             </div>
         `).join('');
 
@@ -260,14 +269,16 @@ class App {
 
         // Reset
         this.state.$savedWordsTitle = document.querySelector('#saved-words-title');
+
         $savedWordsContent.innerHTML = `
             <div class="saved-definitions-container">               
                 ${filteredDefinitions}
             </div>
         `;
-
+        this.addListenersToDefinitions();
         // Add listener to back button.
         document.querySelector('.saved-words-back-button').addEventListener('click', () => {
+            this.state.isInDefinition = false;
             this.resetSavedWordsTitle();
             this.displaySavedWords();
         });
@@ -293,21 +304,21 @@ class App {
             return false;
         }
 
-        const { $savedWordsContainer, $savedWordsTitle, $savedWordsTitleContainer } = this.state;
-        const currentTitle = document.querySelector('#saved-words-title');
+        const { $savedWordsContainer, hasSavedWord } = this.state;
         if (containsClass($savedWordsContainer.classList, "saved-words-active")) {
             $savedWordsContainer.classList.remove("saved-words-active");
-            if (currentTitle.innerText !== 'Palabras guardadas') {
-                $savedWordsTitleContainer.innerHTML = `
-                    <h3 class="saved-words-title" id="saved-words-title">Palabras guardadas</h3>
-                `;
-            }
             setTimeout(() => {
                 document.querySelector('body').style.overflowY = "auto";
-            }, 500)
+            }, 250);
         } else {
             $savedWordsContainer.classList.add("saved-words-active");
             document.querySelector('body').style.overflowY = "hidden";
+            if (!this.state.isInDefinition && this.state.hasSavedWord) {
+                this.displaySavedWords();
+            }
+            if (this.state.savedWordsOpened || this.state.isInDefinition) {
+                return;
+            }
             this.displaySavedWords();
         }
     }
@@ -320,19 +331,30 @@ class App {
     }
 
     addSaveButtonListener() {
+        
+        function formatExample(example) {
+            return example.slice(1, example.length - 1);
+        }
+
         const buttons = document.querySelectorAll('.definition-button');
         for (let i = 0; i < buttons.length; i++) {
             buttons[i].addEventListener('click', e => {
+                listWords(db);
+                console.log(formatExample(
+                    e.target.parentElement.parentElement.childNodes[3].innerText
+                ))
                 try {
-                    addWord(db, { word: this.state.currentWord, definition: e.target.parentElement.parentElement.childNodes[1].innerText, example: e.target.parentElement.parentElement.childNodes[3].innerText })
+                    addWord(db, { 
+                        word: this.state.currentWord, definition: e.target.parentElement.parentElement.childNodes[1].innerText,
+                        example: formatExample(e.target.parentElement.parentElement.childNodes[3].innerText) })
                 } catch(e) {
                     if (e.message.includes("UNIQUE")) {
                         this.displayNotification({ error: true, message: "Ya agregaste esta definicion." });
                         return;
                     }
                 }
+                this.state.hasSavedWord = true;
                 this.displayNotification({ message: "Definicion agregada con éxito" });
-                listWords(db);
             })
         }
     }
