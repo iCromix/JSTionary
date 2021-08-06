@@ -13,8 +13,6 @@ db.prepare(`
     );
 `).run();
 
-clearWords(db);
-
 class App {
     constructor() {
         this.state = {
@@ -34,9 +32,11 @@ class App {
             searchQuery: '',
             currentTheme: document.getElementById('theme-link'),
             currentWord: '',
+            currentOpenedSavedWord: "",
             savedWordsOpened: false,
             hasSavedWord: false,
-            isInDefinition: false
+            isInDefinition: false,
+            currentNotificationHandler: undefined
         }
         this.setVersion(VERSION);
         this.addListeners();
@@ -137,7 +137,6 @@ class App {
     }
 
     displayResult(result) {
-        console.log(this.state);
         const formatedResults = result.meanings[0].definitions.map(definition => `
             <div class="definition-container" id="${definition.definition}">
                 <p class="definition" id="${result.word}">
@@ -203,13 +202,15 @@ class App {
     }
 
     displayNotification(notificationObject, notificationTime=2000) {
+        if (this.state.currentNotificationHandler) return;
         if (notificationObject.error) {
             this.state.$notificationContainer.classList.add('notification-error');
             document.querySelector('#notification-content').innerHTML = `
                 ${notificationObject.message}
             `
-            setTimeout(() => {
+            this.state.currentNotificationHandler = setTimeout(() => {
                 this.state.$notificationContainer.classList.remove('notification-error');
+                this.state.currentNotificationHandler = undefined;
             }, notificationTime);
             return;
         }
@@ -218,8 +219,9 @@ class App {
             ${notificationObject.message}
         `
 
-        setTimeout(() => {
+        this.state.currentNotificationHandler = setTimeout(() => {
             this.state.$notificationContainer.classList.remove('notification-success');
+            this.state.currentNotificationHandler = undefined;
         }, notificationTime);
     }
 
@@ -244,7 +246,8 @@ class App {
 
     addListenersToSavedWords() {
         document.querySelectorAll('.saved-word').forEach(savedWord => {
-            savedWord.addEventListener('click', (event) => {
+            savedWord.addEventListener('click', event => {
+                this.state.currentOpenedSavedWord = event.target.innerText;
                 this.state.isInDefinition = true;
                 this.displaySavedWord(event.target.innerText);
             })
@@ -254,7 +257,6 @@ class App {
     displaySavedWord(word) {
         const { $savedWordsContent, $savedWordsTitleContainer } = this.state;
         const definitions = getWordDefinitions(db, word);
-        console.log(definitions);
         const filteredDefinitions = definitions.map(definition => `
             <div class="definition-container">
                 <p class="definition" id="${word}">${definition.definition}</p>
@@ -304,7 +306,7 @@ class App {
             return false;
         }
 
-        const { $savedWordsContainer, hasSavedWord } = this.state;
+        const { $savedWordsContainer } = this.state;
         if (containsClass($savedWordsContainer.classList, "saved-words-active")) {
             $savedWordsContainer.classList.remove("saved-words-active");
             setTimeout(() => {
@@ -331,7 +333,6 @@ class App {
     }
 
     addSaveButtonListener() {
-        
         function formatExample(example) {
             return example.slice(1, example.length - 1);
         }
@@ -339,10 +340,6 @@ class App {
         const buttons = document.querySelectorAll('.definition-button');
         for (let i = 0; i < buttons.length; i++) {
             buttons[i].addEventListener('click', e => {
-                listWords(db);
-                console.log(formatExample(
-                    e.target.parentElement.parentElement.childNodes[3].innerText
-                ))
                 try {
                     addWord(db, { 
                         word: this.state.currentWord, definition: e.target.parentElement.parentElement.childNodes[1].innerText,
@@ -354,6 +351,10 @@ class App {
                     }
                 }
                 this.state.hasSavedWord = true;
+                if (this.state.currentOpenedSavedWord === this.state.currentWord && this.state.isInDefinition) {
+                    this.displaySavedWord(this.state.currentWord);
+                }
+                
                 this.displayNotification({ message: "Definicion agregada con éxito" });
             })
         }

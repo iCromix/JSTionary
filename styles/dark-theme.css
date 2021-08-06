@@ -645,7 +645,11 @@ header {
 
 #saved-words-content {
     display: flex;
+    flex-wrap: wrap;
+    padding: 0em 3em;
+    margin-bottom: 12em;
     align-items: start;
+    overflow-y: auto;
 }
 
 .saved-words-icon {
@@ -701,7 +705,7 @@ header {
 .saved-word {
     border-radius: 5px;
     padding: .5em;
-    margin: 0 .5em;
+    margin: .5em;
     
     transition: color .25s, background-color .25s;
 }
@@ -713,7 +717,7 @@ header {
 }
 
 .saved-definitions-container {
-    height: 75%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     padding: 0 3em;
