@@ -1,7 +1,7 @@
 const { ipcRenderer } = require('electron');
 const Database = require('better-sqlite3');
 const db = new Database('./db/dictionary.db');
-const { listWords, getUniqueWords, addWord, clearWords, getWordDefinitions } = require('./dbF');
+const { getUniqueWords, addWord, clearWords, getWordDefinitions } = require('./dbF');
 const VERSION = "1.2.0";
 
 // DB
@@ -28,6 +28,7 @@ class App {
             $savedWordsContent: document.querySelector('#saved-words-content'),
             $savedWordsTitleContainer: document.querySelector('.saved-words-title-container'),
             $savedWordsTitle: document.querySelector('#saved-words-title'),
+            $searchSavedWordsInput: document.querySelector('.search-saved-words-input'),
 
             searchQuery: '',
             currentTheme: document.getElementById('theme-link'),
@@ -255,7 +256,9 @@ class App {
     }
 
     displaySavedWord(word) {
-        const { $savedWordsContent, $savedWordsTitleContainer } = this.state;
+        const { $savedWordsContent, $savedWordsTitleContainer, $searchSavedWordsInput } = this.state;
+        // Hide searchbar
+        $searchSavedWordsInput.style.display = "none";
         const definitions = getWordDefinitions(db, word);
         const filteredDefinitions = definitions.map(definition => `
             <div class="definition-container">
@@ -281,6 +284,7 @@ class App {
         // Add listener to back button.
         document.querySelector('.saved-words-back-button').addEventListener('click', () => {
             this.state.isInDefinition = false;
+            $searchSavedWordsInput.style.display = "block";
             this.resetSavedWordsTitle();
             this.displaySavedWords();
         });

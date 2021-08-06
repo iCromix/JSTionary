@@ -243,7 +243,7 @@ h4 {
   background: rgb(48, 201, 114);
 }
 
-input[type="text"] {
+#searchbar {
     font-family: inherit;
     outline: none;
     border: none;
@@ -259,18 +259,18 @@ input[type="text"] {
     transition: .25s box-shadow, .25s color;
 }
 
-input[type="text"]:focus {
+#searchbar:focus {
     color: rgb(69, 218, 133);
     box-shadow: rgb(69, 218, 133) 0px 0px 1px 3px inset;
 }
 
-input[type="text"]::placeholder {
+#searchbar::placeholder {
     font-style: italic;
     font-size: .75em;
     color: #fff;
 }
 
-input[type="text"]:focus::placeholder {
+#searchbar:focus::placeholder {
     color: transparent;
 }
     /* Header  */
@@ -663,8 +663,21 @@ header {
 }
 
 .saved-words-title {
+    margin-bottom: .5em;
     font-size: 1.5em;
     text-align: center;
+}
+
+.saved-words-title::after {
+    margin: 0 auto;
+    margin-top: .5em;
+    border-radius: 5px;
+    content: "";
+    position: relative;
+    display: block;
+    height: 5px;
+    width: 50%;
+    background: rgb(69, 218, 133);
 }
 
 
@@ -684,18 +697,6 @@ header {
 .saved-words-back-button:hover {
     color: rgb(69,218,133);
     cursor: pointer;
-}
-
-.saved-words-title::after {
-    margin: 0 auto;
-    margin-top: .5em;
-    border-radius: 5px;
-    content: "";
-    position: relative;
-    display: block;
-    height: 5px;
-    width: 50%;
-    background: rgb(69, 218, 133);
 }
 
 .saved-words-active {
@@ -722,4 +723,38 @@ header {
     flex-direction: column;
     padding: 0 3em;
     overflow-y: auto;
+}
+
+.search-saved-words-input {
+    font-family: inherit;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    padding: .75em;
+    width: 300px;
+    text-align: center;
+    font-size: 1em;
+    background: transparent;
+    box-shadow: whitesmoke 0px 0px 1px 3px inset;
+    color: #fff;
+
+    transition: .25s box-shadow, .25s color;
+}
+
+.search-saved-words-input
+:focus {
+    color: rgb(69, 218, 133);
+    box-shadow: rgb(69, 218, 133) 0px 0px 1px 3px inset;
+}
+
+.search-saved-words-input
+::placeholder {
+    font-style: italic;
+    font-size: .75em;
+    color: #fff;
+}
+
+.search-saved-words-input
+:focus::placeholder {
+    color: transparent;
 }
