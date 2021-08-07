@@ -1,7 +1,7 @@
 const { ipcRenderer } = require('electron');
 const Database = require('better-sqlite3');
 const db = new Database('./db/dictionary.db');
-const { getUniqueWords, addWord, clearWords, getWordDefinitions } = require('./dbF');
+const { getUniqueWords, addWord, clearWords, getWordDefinitions, getMatchingWords } = require('./dbF');
 const VERSION = "1.2.0";
 
 // DB
@@ -31,6 +31,7 @@ class App {
             $searchSavedWordsInput: document.querySelector('.search-saved-words-input'),
 
             searchQuery: '',
+            searchSavedWordQuery: '',
             currentTheme: document.getElementById('theme-link'),
             currentWord: '',
             currentOpenedSavedWord: "",
@@ -58,6 +59,11 @@ class App {
 
         this.state.$searchBar.addEventListener('focus', function() {
             this.value = ""
+        });
+
+        /// SearchSavedWord
+        this.state.$searchSavedWordsInput.addEventListener('input', e => {
+                this.displaySavedWords(e.target.value);
         })
 
         /// Modal 
@@ -111,6 +117,7 @@ class App {
             this.displayError(true);
             return;
         }
+
         this.displayLoading();
         fetch(`https://api.dictionaryapi.dev/api/v2/entries/es/${this.state.$searchBar.value.toLowerCase()}`)
             .then(resp => resp.json())
@@ -226,22 +233,37 @@ class App {
         }, notificationTime);
     }
 
-    displaySavedWords = () => {
+    displaySavedWords = (wordQuery) => {
         const { $savedWordsContent, savedWordsOpened } = this.state;
-        if (!savedWordsOpened) this.state.savedWordsOpened = true;
+        if (!wordQuery) {
+            if (!savedWordsOpened) this.state.savedWordsOpened = true;
 
-        const words = getUniqueWords(db);
+            const words = getUniqueWords(db);
+            if (!words.length) {
+                $savedWordsContent.innerHTML = `
+                    <p class="result-placeholder">No tienes palabras guardadas.</p>
+                `
+                return;
+            }
+            const filteredWords = words.map(({word}) => `<p class="saved-word">${word}</p>`).join('');
+            $savedWordsContent.innerHTML = `
+                    ${filteredWords}
+            `;
+
+            this.addListenersToSavedWords();
+            return;
+        }
+        const words = getMatchingWords(db, wordQuery.toLowerCase());
         if (!words.length) {
             $savedWordsContent.innerHTML = `
-                <p class="result-placeholder">No tienes palabras guardadas.</p>
+                <p class="result-placeholder">No tienes palabras que concuerden con tu búsqueda</p>
             `
             return;
         }
         const filteredWords = words.map(({word}) => `<p class="saved-word">${word}</p>`).join('');
         $savedWordsContent.innerHTML = `
-                ${filteredWords}
-        `;
-
+            ${filteredWords}
+        `
         this.addListenersToSavedWords();
     }
 
@@ -281,6 +303,7 @@ class App {
             </div>
         `;
         this.addListenersToDefinitions();
+
         // Add listener to back button.
         document.querySelector('.saved-words-back-button').addEventListener('click', () => {
             this.state.isInDefinition = false;
@@ -288,6 +311,8 @@ class App {
             this.resetSavedWordsTitle();
             this.displaySavedWords();
         });
+        // Reset search input
+        this.state.$searchSavedWordsInput.value = '';
     }
 
     resetSavedWordsTitle() {
@@ -342,11 +367,12 @@ class App {
         }
 
         const buttons = document.querySelectorAll('.definition-button');
+        const wordTitle = document.querySelector('.word').innerText;
         for (let i = 0; i < buttons.length; i++) {
             buttons[i].addEventListener('click', e => {
                 try {
                     addWord(db, { 
-                        word: this.state.currentWord, definition: e.target.parentElement.parentElement.childNodes[1].innerText,
+                        word: wordTitle, definition: e.target.parentElement.parentElement.childNodes[1].innerText,
                         example: formatExample(e.target.parentElement.parentElement.childNodes[3].innerText) })
                 } catch(e) {
                     if (e.message.includes("UNIQUE")) {

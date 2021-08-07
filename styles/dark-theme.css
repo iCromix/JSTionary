@@ -18,8 +18,7 @@
 
 * {
     box-sizing: border-box;
-
-    transition: .25s background-color, .25s background;
+    transition: .25s background-color, .35s background;
 }
 
 html {
@@ -471,7 +470,7 @@ header {
     opacity: 0%;
     pointer-events: none;
 
-    transition: opacity .5s, background-color .5s;
+    transition: opacity .25s, background-color .25s;
 }
 
 .definition-button:hover {
@@ -482,8 +481,9 @@ header {
     display: flex;
     justify-content: flex-end;
     height: 0px;
+    margin-top: .5em;
 
-    transition: height .5s;
+    transition: height .25s;
 }
 
 .definition-container:hover .definition-button-container {
@@ -635,7 +635,7 @@ header {
     width: 100%;
     background-color: #303030;
 
-    transition: top .35s;
+    transition: top .35s, background-color .35s;
 }
 
 .saved-words-body {

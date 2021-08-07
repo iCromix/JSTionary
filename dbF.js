@@ -21,6 +21,11 @@ module.exports = {
     return stmt.all();
   },
 
+  getMatchingWords: (db, word) => {
+    const stmt = db.prepare(`SELECT * FROM words WHERE instr(word, '${word}') > 0`);
+    return stmt.all();
+  },
+
   getWordDefinitions: (db, word) => {
     const stmt = db.prepare(`SELECT * FROM words WHERE word = ?`);
     return stmt.all(word);

@@ -230,7 +230,7 @@ h4 {
   background: rgba(255, 166, 0, 0.8);
 }
 
-input[type="text"] {
+#searchBar {
     font-family: inherit;
     outline: none;
     border: none;
@@ -246,18 +246,18 @@ input[type="text"] {
     transition: .25s box-shadow, .25s color;
 }
 
-input[type="text"]:focus {
+#searchBar:focus {
     box-shadow: rgb(79, 82, 238) 0px 0px 1px 3px inset;
     color: rgb(79, 82, 238);
 }
 
-input[type="text"]::placeholder {
+#searchBar::placeholder {
     font-style: italic;
     font-size: .75em;
-    color: #121212;
+    color: #000;
 }
 
-input[type="text"]:focus::placeholder {
+#searchBar:focus::placeholder {
     color: transparent;
 }
     /* Header  */
@@ -268,7 +268,7 @@ header {
     top: 0;
     width: 100%;
     background: rgb(79, 82, 238);
-    box-shadow: rgba(0,0,0,.3) 0px 5px 25px;
+    /*box-shadow: rgba(0,0,0,.3) 0px 5px 25px;*/
     color: #fff;
     font-size: 1em;
     padding: 0;
@@ -452,14 +452,6 @@ header {
     position: absolute;
 }
 
-.bookmark-icon {
-    transition: fill .25s;
-}
-
-.definition-bookmark:hover .bookmark-icon {
-    fill: rgb(255, 166, 0);
-}
-
     /* Errors  */
 
 .error-container {
@@ -544,4 +536,221 @@ header {
   100% {
     transform: rotate(360deg);
   }
+}
+
+    /*  Notification Panel  */
+
+.notification-container {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: -50px;
+    opacity: 1;
+    z-index: 3;
+    text-align: center;
+    border-radius: 5px;
+    left: 32%;
+    background-color: #121212;
+    color: whitesmoke;
+    width: 300px;
+    height: 50px;
+    box-shadow: rgba(0,0,0,.7) 1px 1px 30px 5px;
+
+    transition: opacity .5s, transform .25s, background-color .25s, color .25s;
+}
+
+.notification-body {
+    color: inherit;
+}
+
+.notification-success {
+    transform: translateY(140px);
+    z-index: 1;
+    opacity: 1;
+    background-color: rgb(69, 218, 133);
+    color: #121212;
+}
+
+.notification-error {
+    transform: translateY(140px);
+    z-index: 1;
+    opacity: 1;
+    background-color: rgb(255, 81, 81);
+    color: whitesmoke;
+}
+
+        /*Saved Words*/
+
+.saved-words-container {
+    color: #fff;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: -100%;
+    height: 100%;
+    width: 100%;
+    background-color: rgb(79, 82, 238);
+
+    transition: top .35s, background-color: .5s;
+}
+
+.saved-words-body {
+    display: flex;
+    height: 100%;
+}
+
+#saved-words-content {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0em 3em;
+    margin-bottom: 12em;
+    align-items: start;
+    overflow-y: auto;
+}
+
+.saved-words-icon {
+    fill: rgb(255, 166, 0);
+}
+
+.saved-words-title-container {
+    position: relative;
+    margin-top: 5em;
+    display: flex;
+}
+
+.saved-words-title {
+    margin-bottom: .5em;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.saved-words-title::after {
+    margin: 0 auto;
+    margin-top: .5em;
+    border-radius: 5px;
+    content: "";
+    position: relative;
+    display: block;
+    height: 5px;
+    width: 50%;
+    background: rgb(255, 166, 0);
+}
+
+
+.saved-words-back-button {
+    font-size: 1.17em;
+    border-radius: 5px;
+    background: #121212;
+    padding: .5em;
+    top: -4em;
+    left: -8em;
+    position: absolute;
+    margin-top: 5em;
+    margin-right: 1em;
+    transition: color .25s;
+}
+
+.saved-words-back-button:hover {
+    color: rgb(69,218,133);
+    cursor: pointer;
+}
+
+.saved-words-active {
+    top: 0;
+}
+
+.saved-word {
+    border-radius: 5px;
+    padding: .5em;
+    margin: .5em;
+    
+    transition: color .25s, background-color .25s;
+}
+
+.saved-word:hover {
+    background-color: rgba(69, 218, 133, 1);
+    color: black;
+    cursor: pointer;
+}
+
+.saved-definitions-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0 3em;
+    overflow-y: auto;
+}
+
+.search-saved-words-input {
+    font-family: inherit;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    padding: .75em;
+    width: 300px;
+    text-align: center;
+    font-size: 1em;
+    box-shadow: whitesmoke 0px 0px 1px 3px inset;
+    color: #000;
+
+    transition: .25s box-shadow, .25s color;
+}
+
+.search-saved-words-input:focus {
+    color: #000;
+    box-shadow: rgb(255, 166, 0) 0px 0px 1px 3px inset;
+}
+
+.search-saved-words-input::placeholder {
+    font-style: italic;
+    font-size: 1em;
+    color: #000;
+    opacity: 1;
+
+    transition: opacity .25s;
+}
+
+.search-saved-words-input:focus::placeholder {
+    opacity: 0;
+    color: transparent;
+}
+
+.definition-button {
+    font-family: inherit;
+    font-weight: bold;
+    background-color: rgb(79, 82, 238);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    padding: .5em 1em;
+    opacity: 0%;
+    pointer-events: none;
+
+    transition: opacity .25s, background-color .25s;
+}
+
+.definition-button:hover {
+    background-color: rgb(255, 166, 0);
+}
+
+.definition-button-container {
+    display: flex;
+    justify-content: flex-end;
+    height: 0px;
+    margin-top: .5em;
+
+    transition: height .25s;
+}
+
+.definition-container:hover .definition-button-container {
+    height: 35px;
+}
+
+.definition-container:hover .definition-button {
+    pointer-events: all;
+    cursor: pointer;
+    opacity: 100%;
 }
