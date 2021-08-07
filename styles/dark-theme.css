@@ -408,8 +408,8 @@ header {
 .result {
     display: flex;
     flex-direction: column;
-    justify-content: stretch;
-    align-items: stretch;
+    justify-content: center;
+    align-items: center;
 }
 
 .definition-example {
@@ -434,6 +434,8 @@ header {
     background-color: #121212;
     margin-bottom: 2em;
     padding: 1em;
+    min-width: 450px;
+    max-width: 450px;
 
     transition: .25s background-color;
 }
@@ -484,6 +486,15 @@ header {
     margin-top: .5em;
 
     transition: height .25s;
+}
+
+.btn-del {
+    color: #fff;
+    background-color: rgb(255, 81, 81);
+}
+
+.btn-del:hover {
+    background-color: rgb(255, 90, 90);
 }
 
 .definition-container:hover .definition-button-container {
@@ -639,15 +650,16 @@ header {
 }
 
 .saved-words-body {
-    display: flex;
-    height: 100%;
+    max-height: 100%;
 }
 
 #saved-words-content {
+    font-size: 1em;
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
+    margin: 1em 0 1em 0;
     padding: 0em 3em;
-    margin-bottom: 12em;
     align-items: start;
     overflow-y: auto;
 }
@@ -676,8 +688,10 @@ header {
     position: relative;
     display: block;
     height: 5px;
-    width: 50%;
+    min-width: 150px;
     background: rgb(69, 218, 133);
+
+    transition: background .25s;
 }
 
 
@@ -686,16 +700,17 @@ header {
     border-radius: 5px;
     background: #121212;
     padding: .5em;
-    top: -4em;
-    left: -8em;
+    top: -3.5em;
+    left: -150px;
     position: absolute;
     margin-top: 5em;
     margin-right: 1em;
-    transition: color .25s;
+    transition: color .25s, background .25s;
 }
 
 .saved-words-back-button:hover {
-    color: rgb(69,218,133);
+    background: rgb(69,218,133);
+    color: #000;
     cursor: pointer;
 }
 
@@ -706,7 +721,7 @@ header {
 .saved-word {
     border-radius: 5px;
     padding: .5em;
-    margin: .5em;
+    margin: 0 .5em .5em .5em;
     
     transition: color .25s, background-color .25s;
 }
@@ -718,7 +733,8 @@ header {
 }
 
 .saved-definitions-container {
-    height: 100%;
+    min-height: 75vh;
+    max-height: 75vh;
     display: flex;
     flex-direction: column;
     padding: 0 3em;
@@ -726,6 +742,7 @@ header {
 }
 
 .search-saved-words-input {
+    margin-top: .5em;
     font-family: inherit;
     outline: none;
     border: none;
@@ -734,27 +751,24 @@ header {
     width: 300px;
     text-align: center;
     font-size: 1em;
-    background: transparent;
-    box-shadow: whitesmoke 0px 0px 1px 3px inset;
+    background: #121212;
+    /*box-shadow: whitesmoke 0px 0px 1px 3px inset;*/
     color: #fff;
 
-    transition: .25s box-shadow, .25s color;
+    transition: .25s box-shadow, .25s color, background .25s;
 }
 
-.search-saved-words-input
-:focus {
+.search-saved-words-input:focus {
     color: rgb(69, 218, 133);
     box-shadow: rgb(69, 218, 133) 0px 0px 1px 3px inset;
 }
 
-.search-saved-words-input
-::placeholder {
+.search-saved-words-input::placeholder {
     font-style: italic;
-    font-size: .75em;
+    font-size: 1em;
     color: #fff;
 }
 
-.search-saved-words-input
-:focus::placeholder {
+.search-saved-words-input:focus::placeholder {
     color: transparent;
 }

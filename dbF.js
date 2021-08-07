@@ -6,7 +6,12 @@ module.exports = {
     return;
   },
 
-  removeDefinition: (db, definition) => {
+  deleteWord: (db, word) => {
+    const stmt = db.prepare(`DELETE FROM words WHERE word = ?`);
+    stmt.run(word);
+  },
+
+  deleteDefinition: (db, definition) => {
     const stmt = db.prepare(`DELETE FROM words WHERE definition = ?`);
     stmt.run(definition);
   },
@@ -22,7 +27,7 @@ module.exports = {
   },
 
   getMatchingWords: (db, word) => {
-    const stmt = db.prepare(`SELECT * FROM words WHERE instr(word, '${word}') > 0`);
+    const stmt = db.prepare(`SELECT DISTINCT word FROM words WHERE instr(word, '${word}') > 0`);
     return stmt.all();
   },
 

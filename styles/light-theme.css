@@ -268,12 +268,12 @@ header {
     top: 0;
     width: 100%;
     background: rgb(79, 82, 238);
-    /*box-shadow: rgba(0,0,0,.3) 0px 5px 25px;*/
     color: #fff;
     font-size: 1em;
     padding: 0;
-
     -webkit-app-region: drag;
+
+    transition: background-color .5s;
 }
 
 .header-container {
@@ -400,8 +400,8 @@ header {
 .result {
     display: flex;
     flex-direction: column;
-    justify-content: stretch;
-    align-items: stretch;
+    justify-content: center;
+    align-items: center;
 }
 
     /* Definitions  */
@@ -424,6 +424,8 @@ header {
     background-color: #fff;
     margin-bottom: 2em;
     padding: 1em;
+    min-width: 450px;
+    max-width: 450px;
 
     transition: .25s background-color;
 }
@@ -441,8 +443,6 @@ header {
 
 .definition {
     margin-top: 0;
-    min-width: 400px;
-    max-width: 400px;
     cursor: pointer;
 }
 
@@ -568,15 +568,15 @@ header {
     transform: translateY(140px);
     z-index: 1;
     opacity: 1;
-    background-color: rgb(69, 218, 133);
-    color: #121212;
+    background-color: #3bff48;
+    color: #fff;
 }
 
 .notification-error {
     transform: translateY(140px);
     z-index: 1;
     opacity: 1;
-    background-color: rgb(255, 81, 81);
+    background-color: #ff6969;
     color: whitesmoke;
 }
 
@@ -593,19 +593,20 @@ header {
     width: 100%;
     background-color: rgb(79, 82, 238);
 
-    transition: top .35s, background-color: .5s;
+    transition: top .35s, background-color .5s;
 }
 
 .saved-words-body {
-    display: flex;
-    height: 100%;
+    max-height: 100%;
 }
 
 #saved-words-content {
+    font-size: 1em;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+    margin: 1em 0 1em 0;
     padding: 0em 3em;
-    margin-bottom: 12em;
     align-items: start;
     overflow-y: auto;
 }
@@ -634,26 +635,30 @@ header {
     position: relative;
     display: block;
     height: 5px;
-    width: 50%;
+    min-width: 150px;
     background: rgb(255, 166, 0);
+
+    transition: background .25s;
 }
 
 
 .saved-words-back-button {
     font-size: 1.17em;
     border-radius: 5px;
-    background: #121212;
+    background: #fff;
+    color: #000;
     padding: .5em;
     top: -4em;
     left: -8em;
     position: absolute;
     margin-top: 5em;
     margin-right: 1em;
-    transition: color .25s;
+    transition: color .25s, background-color .25s;
 }
 
 .saved-words-back-button:hover {
-    color: rgb(69,218,133);
+    color: #fff;
+    background-color: rgb(255, 166, 0);
     cursor: pointer;
 }
 
@@ -664,19 +669,20 @@ header {
 .saved-word {
     border-radius: 5px;
     padding: .5em;
-    margin: .5em;
+    margin: 0 .5em .5em .5em;
     
     transition: color .25s, background-color .25s;
 }
 
 .saved-word:hover {
-    background-color: rgba(69, 218, 133, 1);
-    color: black;
+    background-color: rgb(255, 166, 0);
+    color: #121212;
     cursor: pointer;
 }
 
 .saved-definitions-container {
-    height: 100%;
+    min-height: 75vh;
+    max-height: 75vh;
     display: flex;
     flex-direction: column;
     padding: 0 3em;
@@ -684,6 +690,7 @@ header {
 }
 
 .search-saved-words-input {
+    margin-top: .5em;
     font-family: inherit;
     outline: none;
     border: none;
@@ -695,11 +702,11 @@ header {
     box-shadow: whitesmoke 0px 0px 1px 3px inset;
     color: #000;
 
-    transition: .25s box-shadow, .25s color;
+    transition: .25s box-shadow, .25s color, background .25s;
 }
 
 .search-saved-words-input:focus {
-    color: #000;
+    color: rgb(255, 166, 0);
     box-shadow: rgb(255, 166, 0) 0px 0px 1px 3px inset;
 }
 
@@ -734,6 +741,15 @@ header {
 
 .definition-button:hover {
     background-color: rgb(255, 166, 0);
+}
+
+.btn-del {
+    color: #fff;
+    background-color: rgb(255, 81, 81);
+}
+
+.btn-del:hover {
+    background-color: rgb(255, 90, 90);
 }
 
 .definition-button-container {

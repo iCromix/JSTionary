@@ -1,7 +1,7 @@
 const { ipcRenderer } = require('electron');
 const Database = require('better-sqlite3');
 const db = new Database('./db/dictionary.db');
-const { getUniqueWords, addWord, clearWords, getWordDefinitions, getMatchingWords } = require('./dbF');
+const { getUniqueWords, addWord, clearWords, getWordDefinitions, getMatchingWords, deleteDefinition } = require('./dbF');
 const VERSION = "1.2.0";
 
 // DB
@@ -123,7 +123,8 @@ class App {
             .then(resp => resp.json())
             .then(data => {
                 this.state.currentWord = word;
-                this.displayResult(data[0])
+                this.displayResult(data[0]);
+                this.state.$searchBar.scrollIntoView();
             })
             .catch(() => this.displayError());
     }
@@ -277,6 +278,29 @@ class App {
         })
     }
 
+    addListenersToDeleteButtons() {
+        document.querySelectorAll('.btn-del').forEach(button => button.addEventListener('click', e => {
+            console.log(e.target.parentElement.parentElement.childNodes[1].innerText);
+            try {
+                deleteDefinition(db, e.target.parentElement.parentElement.childNodes[1].innerText);
+            } catch(e) {
+                this.displayNotification({ error: true, message: "No se pudo eliminar la definición" });
+                return;
+            }
+            console.log(getWordDefinitions(db, this.state.currentOpenedSavedWord));
+
+            if (!getWordDefinitions(db, this.state.currentOpenedSavedWord).length) {
+                this.resetSavedWordsTitle();
+                this.displaySavedWords();
+                this.displayNotification({ message: `Se eliminó la palabra ${this.state.currentOpenedSavedWord}` }, 3000);
+                return;
+            }
+            
+            this.displayNotification({ message: "Definicion eliminada correctamente" });
+            this.displaySavedWord(this.state.currentOpenedSavedWord);
+        }))
+    }
+
     displaySavedWord(word) {
         const { $savedWordsContent, $savedWordsTitleContainer, $searchSavedWordsInput } = this.state;
         // Hide searchbar
@@ -286,6 +310,9 @@ class App {
             <div class="definition-container">
                 <p class="definition" id="${word}">${definition.definition}</p>
                 ${definition.example ? `<span class="definition-example">"${definition.example}"</span>` : `<div style="display: none"></div>`}
+                <div class="definition-button-container">
+                    <button class="definition-button btn-del">Eliminar</button>
+                </div>
             </div>
         `).join('');
 
@@ -311,6 +338,9 @@ class App {
             this.resetSavedWordsTitle();
             this.displaySavedWords();
         });
+
+        // Add listener to delete buttons
+        this.addListenersToDeleteButtons();
         // Reset search input
         this.state.$searchSavedWordsInput.value = '';
     }
