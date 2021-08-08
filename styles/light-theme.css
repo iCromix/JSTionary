@@ -69,7 +69,6 @@ h2 {
 }
 
 h4 {
-    margin-top: 0;
     font-weight: normal;
     color: #fff;
     font-size: 1.25em;
@@ -407,6 +406,7 @@ header {
     /* Definitions  */
 
 .definition-example {
+    margin-bottom: .5em;
     margin-top: .5em;
     display: block;
     text-align: center;
@@ -418,7 +418,6 @@ header {
     border-radius: 5px;
     line-height: 1.4;
     font-family: inherit;
-    font-size: .95em;
     text-align: left;
     color: #121212;
     background-color: #fff;
@@ -432,7 +431,7 @@ header {
 
 .definition-container p {
     margin: 0;
-    font-size: 1.05em;
+    font-size: 1em;
     font-weight: normal;
     transition: .25s color;
 }
