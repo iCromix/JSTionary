@@ -1,7 +1,7 @@
 const { ipcRenderer } = require('electron');
 const Database = require('better-sqlite3');
 const db = new Database('./db/dictionary.db');
-const { getUniqueWords, addWord, clearWords, getWordDefinitions, getMatchingWords, deleteDefinition } = require('./dbF');
+const { getUniqueWords, addWord, clearWords, getWordDefinitions, getMatchingWords, deleteDefinition, deleteWord } = require('./dbF');
 const VERSION = "1.2.0";
 
 // DB
@@ -234,7 +234,7 @@ class App {
         }, notificationTime);
     }
 
-    displaySavedWords = (wordQuery) => {
+    displaySavedWords = wordQuery => {
         const { $savedWordsContent, savedWordsOpened } = this.state;
         if (!wordQuery) {
             if (!savedWordsOpened) this.state.savedWordsOpened = true;
@@ -278,16 +278,27 @@ class App {
         })
     }
 
+    deleteCurrentWord() {
+        const { currentOpenedSavedWord } = this.state;
+        try {
+            deleteWord(db, currentOpenedSavedWord);
+        } catch(e) {
+            this.displayNotification({ error: true, message: "Algo salió mal" });
+            return;
+        }
+        this.displayNotification({ message: `Palabra ${currentOpenedSavedWord} eliminada` });
+        this.resetSavedWordsTitle();
+        this.displaySavedWords();
+    }
+
     addListenersToDeleteButtons() {
         document.querySelectorAll('.btn-del').forEach(button => button.addEventListener('click', e => {
-            console.log(e.target.parentElement.parentElement.childNodes[1].innerText);
             try {
                 deleteDefinition(db, e.target.parentElement.parentElement.childNodes[1].innerText);
             } catch(e) {
                 this.displayNotification({ error: true, message: "No se pudo eliminar la definición" });
                 return;
             }
-            console.log(getWordDefinitions(db, this.state.currentOpenedSavedWord));
 
             if (!getWordDefinitions(db, this.state.currentOpenedSavedWord).length) {
                 this.resetSavedWordsTitle();
@@ -298,7 +309,11 @@ class App {
             
             this.displayNotification({ message: "Definicion eliminada correctamente" });
             this.displaySavedWord(this.state.currentOpenedSavedWord);
-        }))
+        }));
+
+        document.querySelector('.delete-button').addEventListener('click', () => {
+            this.deleteCurrentWord();
+        })
     }
 
     displaySavedWord(word) {
@@ -319,6 +334,7 @@ class App {
         $savedWordsTitleContainer.innerHTML = `
             <h3 class="saved-words-back-button">< Atrás</h3>
             <h3 class="saved-words-title" id="saved-words-title">${word}</h3>
+            <h3 class="delete-button">Eliminar palabra</h3>
         `;
 
         // Reset
