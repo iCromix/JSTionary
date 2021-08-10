@@ -68,8 +68,17 @@ class App {
 
         /// Modal 
         document.querySelector("#about").addEventListener('click', function() {
-            this.state.$aboutModal.classList.remove('hide');
-            this.state.$aboutModal.style.display = "block";
+            (() => {
+                if(this.containsClass(this.state.$aboutModal.classList, 'hide')) {
+                    this.state.$aboutModal.classList.remove('hide');
+                    this.state.$aboutModal.style.display = "block";
+                    return;
+                }
+                this.state.$aboutModal.classList.add('hide');
+                this.state.$aboutModal.style.display = "none";
+            })();
+            //this.state.$aboutModal.classList.remove('hide');
+            //this.state.$aboutModal.style.display = "block";
         }.bind(this));
 
         // Toggle Saved Words Button
@@ -119,7 +128,7 @@ class App {
         }
 
         this.displayLoading();
-        fetch(`https://api.dictionaryapi.dev/api/v2/entries/es/${this.state.$searchBar.value.toLowerCase()}`)
+        fetch(`https://api.dictionaryapi.dev/api/v2/entries/es/${word}`)
             .then(resp => resp.json())
             .then(data => {
                 this.state.currentWord = word;
@@ -332,9 +341,14 @@ class App {
         `).join('');
 
         $savedWordsTitleContainer.innerHTML = `
-            <h3 class="saved-words-back-button">< Atrás</h3>
+        <div class="title-container">
+            <div class="title-button-container">
+                <h3 class="saved-words-back-button">< Atrás</h3>
+                <h3 class="search-again-button">Más definiciones</h3>
+                <h3 class="delete-button">Eliminar <br>palabra</h3>
+            </div>
             <h3 class="saved-words-title" id="saved-words-title">${word}</h3>
-            <h3 class="delete-button">Eliminar palabra</h3>
+        </div>
         `;
 
         // Reset
@@ -359,6 +373,17 @@ class App {
         this.addListenersToDeleteButtons();
         // Reset search input
         this.state.$searchSavedWordsInput.value = '';
+
+        // Add listener to search again buttons
+        document.querySelector('.search-again-button').addEventListener('click', () => {
+            if (this.state.currentOpenedSavedWord === this.state.currentWord) {
+                this.toggleSavedWords();
+                this.state.$searchSavedWordsInput.scrollIntoView();
+                return;
+            }
+            this.toggleSavedWords();
+            this.searchWord(this.state.currentOpenedSavedWord);
+        })
     }
 
     resetSavedWordsTitle() {
@@ -371,24 +396,36 @@ class App {
             }
     }
 
-    toggleSavedWords = () => {
-        function containsClass(arr, className) {
-            for (let i = 0; i < arr.length; i++) {
-                if (arr[i] == className) {
-                    return true;
-                }
-            }
-            return false;
-        }
 
+    containsClass(arr, className) {
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i] == className) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    toggleSavedWords = () => {
         const { $savedWordsContainer } = this.state;
-        if (containsClass($savedWordsContainer.classList, "saved-words-active")) {
+        if (this.containsClass($savedWordsContainer.classList, "saved-words-active")) {
             $savedWordsContainer.classList.remove("saved-words-active");
+            if (this.state.currentOpenedSavedWord) {
+                document.querySelector('.saved-definitions-container').style.overflowY = "hidden";
+                document.querySelector('.saved-definitions-container').style.display = "none";
+            }
             setTimeout(() => {
                 document.querySelector('body').style.overflowY = "auto";
             }, 250);
         } else {
             $savedWordsContainer.classList.add("saved-words-active");
+            if (this.state.currentOpenedSavedWord) {
+                document.querySelector('.saved-definitions-container').style.display = "block";
+                setTimeout(() => {
+                    document.querySelector('.saved-definitions-container').style.overflowY = "auto";
+                }, 300);
+            }
+
             document.querySelector('body').style.overflowY = "hidden";
             if (!this.state.isInDefinition && this.state.hasSavedWord) {
                 this.displaySavedWords();

@@ -646,7 +646,6 @@ header {
 
 
 .saved-words-back-button {
-    margin-right: 1.5em;
     font-size: 1.17em;
     border-radius: 5px;
     background: rgb(255, 166, 0);
@@ -786,4 +785,33 @@ header {
 
 .delete-button:hover {
     background: rgb(255, 100, 100);
+}
+
+.search-again-button {
+    text-align: center;
+    font-size: 1.17em;
+    margin-left: 1.5em;
+    border-radius: 5px;
+    background: #8a72b8;
+    padding: .5em;
+    cursor: pointer;
+
+    transition: background .25s;
+}
+
+.search-again-button:hover {
+    background: #9d82d1;
+}
+
+.title-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: center;
+}
+
+.title-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

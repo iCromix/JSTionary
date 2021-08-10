@@ -79,10 +79,6 @@ h4 {
     transition: opacity .5s linear;
 }
 
-.definition-container:last-child {
-    margin-bottom: 0;;
-}
-
 .result-placeholder {
     color: #EBEBEB;
     cursor: initial;
@@ -493,7 +489,7 @@ header {
 }
 
 .btn-del:hover {
-    background-color: rgb(255, 90, 90);
+    background-color: #ff6e6e;
 }
 
 .definition-container:hover .definition-button-container {
@@ -678,13 +674,14 @@ header {
 }
 
 .saved-words-title {
+    margin-bottom: .5em;
     font-size: 1.5em;
     text-align: center;
 }
 
 .saved-words-title::after {
     margin: 0 auto;
-    margin-top: 1em;
+    margin-top: .5em;
     border-radius: 5px;
     content: "";
     position: relative;
@@ -698,7 +695,6 @@ header {
 
 
 .saved-words-back-button {
-    margin-right: 1.5em;
     font-size: 1.17em;
     border-radius: 5px;
     background: #45DA85;
@@ -732,8 +728,7 @@ header {
 }
 
 .saved-definitions-container {
-    min-height: 75vh;
-    max-height: 75vh;
+    max-height: 450px;
     display: flex;
     flex-direction: column;
     padding: 0 3em;
@@ -773,8 +768,6 @@ header {
 }
 
 .delete-button {
-    min-width: 100px;
-    max-width: 100px;
     text-align: center;
     font-size: 1.17em;
     margin-left: 1.5em;
@@ -788,4 +781,33 @@ header {
 
 .delete-button:hover {
     background: rgb(255, 100, 100);
+}
+
+.search-again-button {
+    text-align: center;
+    font-size: 1.17em;
+    margin-left: 1.5em;
+    border-radius: 5px;
+    background: #8a72b8;
+    padding: .5em;
+    cursor: pointer;
+
+    transition: background .25s;
+}
+
+.search-again-button:hover {
+    background: #9d82d1;
+}
+
+.title-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: center;
+}
+
+.title-button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
