@@ -148,7 +148,6 @@ class App {
                 sel.removeAllRanges();
                 sel.addRange(r);
                 document.execCommand('Copy');
-                console.log(this);
                 new Notification('Definicion copiada!', { body: `La definicion de ${this.id} se copió al portapapeles` })
             })
         }
@@ -363,6 +362,7 @@ class App {
 
         // Add listener to back button.
         document.querySelector('.saved-words-back-button').addEventListener('click', () => {
+            this.state.currentOpenedSavedWord = undefined;
             this.state.isInDefinition = false;
             $searchSavedWordsInput.style.display = "block";
             this.resetSavedWordsTitle();
@@ -375,41 +375,40 @@ class App {
         this.state.$searchSavedWordsInput.value = '';
 
         // Add listener to search again buttons
-        document.querySelector('.search-again-button').addEventListener('click', () => {
-            if (this.state.currentOpenedSavedWord === this.state.currentWord) {
+            document.querySelector('.search-again-button').addEventListener('click', () => {
+                if (this.state.currentOpenedSavedWord === this.state.currentWord) {
+                    this.toggleSavedWords();
+                    this.state.$searchBar.scrollIntoView();
+                    return;
+                }
                 this.toggleSavedWords();
-                this.state.$searchSavedWordsInput.scrollIntoView();
-                return;
-            }
-            this.toggleSavedWords();
-            this.searchWord(this.state.currentOpenedSavedWord);
-        })
-    }
-
-    resetSavedWordsTitle() {
-        const { $savedWordsTitleContainer } = this.state;
-        const currentTitle = document.querySelector('#saved-words-title');
-            if (currentTitle.innerText !== 'Palabras guardadas') {
-                $savedWordsTitleContainer.innerHTML = `
-                    <h3 class="saved-words-title" id="saved-words-title">Palabras guardadas</h3>
-                `;
-            }
-    }
-
-
-    containsClass(arr, className) {
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i] == className) {
-                return true;
-            }
+                this.searchWord(this.state.currentOpenedSavedWord);
+            })
         }
-        return false;
-    }
 
-    toggleSavedWords = () => {
-        const { $savedWordsContainer } = this.state;
-        if (this.containsClass($savedWordsContainer.classList, "saved-words-active")) {
-            $savedWordsContainer.classList.remove("saved-words-active");
+        resetSavedWordsTitle() {
+            const { $savedWordsTitleContainer } = this.state;
+            const currentTitle = document.querySelector('#saved-words-title');
+                if (currentTitle.innerText !== 'Palabras guardadas') {
+                    $savedWordsTitleContainer.innerHTML = `
+                        <h3 class="saved-words-title" id="saved-words-title">Palabras guardadas</h3>
+                    `;
+                }
+        }
+
+        containsClass(arr, className) {
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i] == className) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        toggleSavedWords = () => {
+            const { $savedWordsContainer } = this.state;
+            if (this.containsClass($savedWordsContainer.classList, "saved-words-active")) {
+                $savedWordsContainer.classList.remove("saved-words-active");
             if (this.state.currentOpenedSavedWord) {
                 document.querySelector('.saved-definitions-container').style.overflowY = "hidden";
                 document.querySelector('.saved-definitions-container').style.display = "none";
