@@ -82,7 +82,7 @@ class App {
         }.bind(this));
 
         // Toggle Saved Words Button
-        this.state.$savedWordsButton.addEventListener('click', this.toggleSavedWords)
+        this.state.$savedWordsButton.addEventListener('click', this.toggleSavedWords);
 
         // Minimize App Button
         this.state.$minimizeButton.addEventListener('click', function() {
@@ -386,8 +386,10 @@ class App {
             })
         }
 
-        resetSavedWordsTitle() {
-            const { $savedWordsTitleContainer } = this.state;
+    resetSavedWordsTitle() {
+        const { $savedWordsTitleContainer } = this.state;
+        this.state.isInDefinition = false;
+        this.state.currentOpenedSavedWord = undefined;
             const currentTitle = document.querySelector('#saved-words-title');
                 if (currentTitle.innerText !== 'Palabras guardadas') {
                     $savedWordsTitleContainer.innerHTML = `
