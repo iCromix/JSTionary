@@ -4,6 +4,8 @@ JSTionary es una aplicacion de diccionario hecha en [Electron.js](https://www.el
 
 ## Caracteristicas
 
+**WIP, _Por ahora no se pueden guardar palabras_**
+
 ### Interfaz intuitiva y sencilla
 
 **JSTionary** cuenta con una interfaz sencilla y facil de usar, además cuenta con temas claro y oscuro entre los cuales podras cambiar cuando quieras con un simple click.
