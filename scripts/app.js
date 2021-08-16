@@ -1,3 +1,12 @@
+const fs = require('fs');
+
+// Create folder for DB if doesn't exists
+if (!fs.existsSync(`${__dirname}/db`)) {
+    fs.mkdir(`${__dirname}/db`, err => {
+        if (err) throw new Error(err);
+    });
+};
+
 const { ipcRenderer } = require('electron');
 const Database = require('better-sqlite3');
 const db = new Database('./db/dictionary.db');
